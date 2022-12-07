@@ -15,7 +15,9 @@ public class SparkFirstProgram {
         final var myRdd = sc.parallelize(data);
 
         final var max = myRdd.reduce(Integer::max);
-        System.out.println(max);
+        final var min = myRdd.reduce(Integer::min);
+        final var sum = myRdd.reduce(Integer::sum);
+        System.out.printf("MAX~>%d, MIN~>%d, SUM~>%d%n", max, min, sum);
 
         sc.close();
     }

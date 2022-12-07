@@ -32,7 +32,7 @@ Unify the processing of data in batches and real-time streaming.
 
 ---
 
-### Chapter 01 - The Big Picture
+### Chapter 01. The Big Picture
 
 #### Big Data
 
@@ -97,8 +97,8 @@ solve problems involving massive amounts of data and computation. It provides a 
 storage and processing of big data using the **MapReduce** programming model.
 
 Hadoop uses **Hadoop Distributed File System (HDFS)** which is a distributed, scalable, and portable file system written
-in Java for the Hadoop framework and allows user to work with large data sets. It also duplicates blocks of data for **
-fault tolerance**.
+in Java for the Hadoop framework and allows user to work with large data sets. It also duplicates blocks of data for
+**fault tolerance**.
 
 HDFS uses MapReduce which allows computations on that data.
 
@@ -173,4 +173,130 @@ workers and execution of the task. Some actions of Spark are count and collect.
 
 ![Spark Architecture](SparkDiagram.png)
 
+---
+
+### Chapter 02. Project Setup - Maven
+
+We can create a Maven project and add spark dependencies.
+
+```
+<dependency>
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-core_2.13</artifactId>
+    <version>${apache-spark.version}</version>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-sql_2.13</artifactId>
+    <version>${apache-spark.version}</version>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.hadoop</groupId>
+    <artifactId>hadoop-hdfs</artifactId>
+    <version>3.3.2</version>
+</dependency>
+```
+
+Latest apache spark version as of this writing is **3.2.2**
+
+Complete `pom.xml` can be found at Github:
+[pom.xml](https://github.com/backstreetbrogrammer/11_JavaSpark/pom.xml)
+
+#### Git clone Hadoop to local
+
+1. Clone this repo: `https://github.com/cdarlint/winutils` in Windows machine.
+
+Please clone the entire repo because doing that will help to use any version of `winutils.exe`
+
+2. Set `HADOOP_HOME` environment variable to the root path of the latest version
+
+3. Add to the `PATH` environment, the `%HADOOP_HOME%\bin`
+
+4. Edit `Application` and `Junit` templates in IntelliJ and add VM arguments as:
+
+```
+-Dhadoop.home.dir=C:\\Users\\rishi\\Downloads\\BuildWithTech\\winutils\\hadoop-3.2.2
+```
+
+---
+
+### Chapter 03. Spark RDD - First Program
+
+Every Spark application consists of a **driver program** that runs the user’s `main` function and executes various
+parallel operations on a cluster. Spark provides RDD, which is a collection of elements partitioned across the nodes of
+the cluster that can be operated on in parallel.
+
+RDDs are created by starting with a file in HDFS or other supported file systems, or an existing Scala collection in the
+driver program, and transforming it. Users may also ask Spark to persist an RDD in **memory**, allowing it to be reused
+efficiently across parallel operations. Also, RDDs automatically recover from node failures.
+
+Spark uses **shared variables** in parallel operations. By default, when Spark runs a function in parallel as a set of
+tasks on different nodes, it ships a copy of each variable used in the function to each task. Sometimes, a variable
+needs to be shared across tasks, or between tasks and the driver program.
+
+Spark supports 2 types of shared variables:
+
+- **broadcast variables** => to cache a value in memory on all nodes
+- **accumulators** => variables that are only “added” to, such as counters and sums
+
+#### Initializing Spark
+
+1. Build a `SparkConf` object that contains information about the application
+
+```
+final var conf = new SparkConf().setAppName("SparkFirstProgram").setMaster("local[*]");
+```
+
+The `appName` parameter is a name for the application to show on the cluster UI.
+
+The `master` is a Spark, Mesos or YARN cluster URL, or a special “local” string to run in local mode. When running on a
+cluster, we will not want to hardcode master in the program, but rather launch the application with
+`spark-submit` and receive it there. However, for local testing and unit tests, we can pass “local” to run Spark
+in-process.
+
+2. Create a `JavaSparkContext` object which tells Spark how to access a cluster, by passing the `SparkConf` object to
+   its constructor
+
+```
+final var sc = new JavaSparkContext(conf);
+```
+
+3. Create RDD which is a fault-tolerant collection of elements that can be operated on in parallel
+
+There are two ways to create RDDs:
+
+- **parallelizing** an existing collection in the driver program
+- referencing a dataset in an **external storage system**, such as a shared filesystem, HDFS, HBase, or any data source
+  offering a Hadoop `InputFormat`
+
+Parallelized collections are created by calling JavaSparkContext’s `parallelize() `method on an existing
+`Collection` in the driver program. The elements of the collection are copied to form a **RDD** that can be operated on
+in parallel.
+
+```
+final var data = List.of(165, 254, 124656, 356838, 64836);
+final var myRdd = sc.parallelize(data);
+```
+
+RDD created `myRdd` can be operated on in parallel. These operations can be to _reduce_, _map_, etc.
+
+```
+final var max = myRdd.reduce(Integer::max);
+final var min = myRdd.reduce(Integer::min);
+final var sum = myRdd.reduce(Integer::sum);
+```
+
+One important parameter for parallel collections is the number of partitions to cut the dataset into. Spark will run one
+task for each partition of the cluster.
+
+We may want 2-4 partitions for each CPU in the cluster. Spark tries to set the number of partitions automatically based
+on our cluster.
+
+However, we can also set it manually by passing it as a second parameter to parallelize() method.
+
+```
+sc.parallelize(data, 10)
+```
 
