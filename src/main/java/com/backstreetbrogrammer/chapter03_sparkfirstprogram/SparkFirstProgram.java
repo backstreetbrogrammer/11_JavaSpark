@@ -7,7 +7,7 @@ import java.util.List;
 
 public class SparkFirstProgram {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         final var conf = new SparkConf().setAppName("SparkFirstProgram").setMaster("local[*]");
         final var sc = new JavaSparkContext(conf);
 
