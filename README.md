@@ -300,3 +300,34 @@ However, we can also set it manually by passing it as a second parameter to para
 sc.parallelize(data, 10)
 ```
 
+---
+
+### Chapter 04. Spark RDD - Reduces
+
+As discussed, once `JavaRDD` object is created, it can be used to perform `reduce` operation.
+
+In functional programming-language jargon, this is referred to as a **fold** because we can view this operation as
+repeatedly folding a long piece of paper (our stream) until it forms a small square, which is the result of the **fold**
+operation.
+
+Example:
+
+```
+final var max = myRdd.reduce(Integer::max);
+final var min = myRdd.reduce(Integer::min);
+final var sum = myRdd.reduce(Integer::sum);
+```
+
+---
+
+### Chapter 05. Spark RDD - Mapping
+
+Transformation: map(func)
+
+> Return a new distributed dataset formed by passing each element of the source through a function `func`.
+
+As RDDs are immutable, after applying the `map` transformation, new RDD is created.
+
+The `func` is applied to each element, mapping it into a new element (the word mapping is used because it has a meaning
+similar to transforming but with the nuance of “creating a new version of” rather than “modifying”). 
+
