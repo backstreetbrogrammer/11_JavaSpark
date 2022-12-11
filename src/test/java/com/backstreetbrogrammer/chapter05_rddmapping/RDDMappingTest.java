@@ -25,14 +25,33 @@ public class RDDMappingTest {
     static void beforeAll() {
         final var dataSize = 100_000;
         for (int i = 0; i < dataSize; i++) {
-            data.add(RandomStringUtils.random(ThreadLocalRandom.current().nextInt(10)));
+            data.add(RandomStringUtils.randomAscii(ThreadLocalRandom.current().nextInt(10)));
         }
         assertEquals(dataSize, data.size());
     }
 
     @Test
-    @DisplayName("Test map operation using Spark RDD")
-    void testMapOperationUsingSparkRDD() {
+    @DisplayName("Test map operation using Spark RDD count() method")
+    void testMapOperationUsingSparkRDDCount() {
+        final var conf = new SparkConf().setAppName("RDDMappingTest").setMaster("local[*]");
+        final var sc = new JavaSparkContext(conf);
+        final var myRdd = sc.parallelize(data);
+
+        final Instant start = Instant.now();
+        for (int i = 0; i < noOfIterations; i++) {
+            final var strLengths = myRdd.map(String::length)
+                                        .count();
+            assertEquals(data.size(), strLengths);
+        }
+        final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
+        System.out.printf("[Spark RDD] count() method time taken: %d ms%n%n", timeElapsed);
+
+        sc.close();
+    }
+
+    @Test
+    @DisplayName("Test map operation using Spark RDD collect() method")
+    void testMapOperationUsingSparkRDDCollect() {
         final var conf = new SparkConf().setAppName("RDDMappingTest").setMaster("local[*]");
         final var sc = new JavaSparkContext(conf);
         final var myRdd = sc.parallelize(data);
@@ -41,13 +60,34 @@ public class RDDMappingTest {
         for (int i = 0; i < noOfIterations; i++) {
             final var strLengths = myRdd.map(String::length)
                                         .collect();
-            System.out.println("[Spark RDD] List size:" + strLengths.size());
+            assertEquals(data.size(), strLengths.size());
         }
         final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
-        System.out.printf("[Spark RDD] time taken: %d ms%n%n", timeElapsed);
+        System.out.printf("[Spark RDD] collect() method time taken: %d ms%n%n", timeElapsed);
 
         sc.close();
     }
+
+    @Test
+    @DisplayName("Test map operation using Spark RDD mapReduce")
+    void testMapOperationUsingSparkRDDMapReduce() {
+        final var conf = new SparkConf().setAppName("RDDMappingTest").setMaster("local[*]");
+        final var sc = new JavaSparkContext(conf);
+        final var myRdd = sc.parallelize(data);
+
+        final Instant start = Instant.now();
+        for (int i = 0; i < noOfIterations; i++) {
+            final var strLengths = myRdd.map(String::length)
+                                        .map(v -> 1L)
+                                        .reduce(Long::sum);
+            assertEquals(data.size(), strLengths);
+        }
+        final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
+        System.out.printf("[Spark RDD] mapReduce time taken: %d ms%n%n", timeElapsed);
+
+        sc.close();
+    }
+
 
     @Test
     @DisplayName("Test map operation using Java Streams")
@@ -57,7 +97,7 @@ public class RDDMappingTest {
             final var strLengths = data.stream()
                                        .map(String::length)
                                        .collect(Collectors.toList());
-            System.out.println("[Java Streams] List size:" + strLengths.size());
+            assertEquals(data.size(), strLengths.size());
         }
         final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
         System.out.printf("[Java Streams] time taken: %d ms%n%n", timeElapsed);
@@ -71,7 +111,7 @@ public class RDDMappingTest {
             final var strLengths = data.parallelStream()
                                        .map(String::length)
                                        .collect(Collectors.toList());
-            System.out.println("[Java Parallel Streams] List size:" + strLengths.size());
+            assertEquals(data.size(), strLengths.size());
         }
         final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
         System.out.printf("[Java Parallel Streams] time taken: %d ms%n%n", timeElapsed);

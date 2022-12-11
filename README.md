@@ -25,6 +25,8 @@ Unify the processing of data in batches and real-time streaming.
 3. Spark RDD - First Program
 4. Spark RDD - Reduces
 5. Spark RDD - Mapping
+6. Spark RDD - Printing elements
+7. Spark RDD - External Datasets
 
 ### Youtube
 
@@ -329,5 +331,47 @@ Transformation: map(func)
 As RDDs are immutable, after applying the `map` transformation, new RDD is created.
 
 The `func` is applied to each element, mapping it into a new element (the word mapping is used because it has a meaning
-similar to transforming but with the nuance of “creating a new version of” rather than “modifying”). 
+similar to transforming but with the nuance of “creating a new version of” rather than “modifying”).
+
+Example:
+
+```
+final var myList = myRdd.map(String::length).collect();
+final var count = myRdd.map(String::length).count();
+final var count = myRdd.map(String::length).map(v -> 1L).reduce(Long::sum);
+```
+
+---
+
+### Chapter 06. Spark RDD - Printing elements
+
+We can print out the elements of an RDD using:
+
+```
+rdd.foreach(println)
+OR 
+rdd.map(println) 
+```
+
+On a **single** machine, this will generate the expected output and print all the RDD’s elements.
+
+However, in **cluster** mode, the output to stdout being called by the executors is now writing to the **executor’s**
+stdout instead, not the one on the **driver**, so stdout on the driver won’t show these.
+
+Also, we may see `NotSerializableException` in few cases when the data is huge.
+
+To print all elements on the **driver**, one can use the `collect()` method to first bring the RDD to the driver node:
+
+```
+rdd.collect().foreach(println)
+```
+
+This can cause the driver to run **out of memory**, though, because `collect()` fetches the entire RDD to a **single**
+machine; if we only need to print a few elements of the RDD, a safer approach is to use the `take()` method:
+
+```
+rdd.take(100).foreach(println)
+```
+
+---
 
