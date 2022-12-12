@@ -470,3 +470,31 @@ final var tuple2JavaRDD = myRdd.map(line -> new Tuple2<>(line, line.length()));
 
 ### Chapter 09. Spark RDD - PairRDDs
 
+While most Spark operations work on RDDs containing any type of objects, a few special operations are only available on
+RDDs of **key-value pairs**. The most common ones are distributed “shuffle” operations, such as grouping or aggregating
+the elements by a key.
+
+In Java, key-value pairs are represented using the `scala.Tuple2` class from the Scala standard library. We can simply
+call `new Tuple2(a, b)` to create a tuple, and access its fields later with `tuple._1()` and `tuple._2()`.
+
+RDDs of key-value pairs are represented by the `JavaPairRDD` class. We can construct `JavaPairRDDs` from `JavaRDDs`
+using special versions of the map operations, like `mapToPair` and `flatMapToPair`. The `JavaPairRDD` will have both
+standard RDD functions and special key-value ones.
+
+For example, the following code uses the `reduceByKey` operation on key-value pairs to count how many times each line of
+text occurs in a file:
+
+```
+final var lines = sc.textFile("data.txt");
+final var pairs = lines.mapToPair(s -> new Tuple2(s, 1));
+final var counts = pairs.reduceByKey((a, b) -> a + b);
+```
+
+We could also use `counts.sortByKey()`, for example, to sort the pairs alphabetically, and finally `counts.collect()` to
+bring them back to the driver program as an array of objects.
+
+When using custom objects as the key in key-value pair operations, we must be sure that a custom `equals()` method is
+accompanied by a matching `hashCode()` method.
+
+---
+
