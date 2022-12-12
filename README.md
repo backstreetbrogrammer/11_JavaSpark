@@ -27,6 +27,8 @@ Unify the processing of data in batches and real-time streaming.
 5. Spark RDD - Mapping
 6. Spark RDD - Printing elements
 7. Spark RDD - External Datasets
+8. Spark RDD - Tuples
+9. Spark RDD - PairRDDs
 
 ### Youtube
 
@@ -441,5 +443,30 @@ Apart from **text files**, Spark’s Java API also supports several other data f
 
 ---
 
+### Chapter 08. Spark RDD - Tuples
 
+In Scala, a **tuple** is a value that contains a fixed number of elements, each with its own type. Tuples are immutable.
+Tuples are especially handy for returning multiple values from a method.
+
+A tuple with two elements can be created as follows:
+
+```
+val person = ("John", 25)
+```
+
+This creates a tuple containing a `String` element and an `Int` element. The inferred type of `person`
+is `(String, Int)`.
+
+Tuples are of type `Tuple1`, `Tuple2`, `Tuple3` and so on. There currently is an upper limit of **22** in the Scala if
+we need more. For each `TupleN` type, where `1 <= N <= 22`, Scala defines a number of element-access methods.
+
+Example:
+
+```
+final var tuple2JavaRDD = myRdd.map(line -> new Tuple2<>(line, line.length()));
+```
+
+---
+
+### Chapter 09. Spark RDD - PairRDDs
 
