@@ -375,3 +375,71 @@ rdd.take(100).foreach(println)
 
 ---
 
+### Chapter 07. Spark RDD - External Datasets
+
+Spark can create distributed datasets from any storage source supported by Hadoop like:
+
+- Local file system
+- HDFS
+- Cassandra
+- HBase
+- Amazon S3, etc.
+
+Spark supports:
+
+- Text files
+- [SequenceFiles](https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/SequenceFileInputFormat.html)
+- Any Hadoop [InputFormat](https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/InputFormat.html)
+
+**Text file** RDDs can be created using `SparkContext`’s `textFile()` method. This method takes a **URI** for the file
+(either a local path on the machine, or a `hdfs://`, `s3a://`, etc. URI) and reads it as a collection of lines.
+
+Example:
+
+```
+JavaRDD<String> dataFile = sc.textFile("data.txt");
+```
+
+Once created, `dataFile` can be acted on by dataset operations like _map_ or _reduce_.
+
+Few important points to read files in Spark:
+
+- If using a path on the local filesystem, the file must also be accessible at the same path on **worker nodes**. Either
+  copy the file to all workers or use a network-mounted shared file system.
+- All of Spark’s file-based input methods, including `textFile`, support running on **directories**, **compressed**
+  files, and **wildcards** as well. For example, we can use:
+
+```
+sc.textFile("/my/directory")
+sc.textFile("/my/directory/*.txt")
+sc.textFile("/my/directory/*.gz")
+```
+
+- The `textFile()` method also takes an optional **second** argument for controlling the number of partitions of the
+  file. By default, Spark creates **one** partition for each block of the file (blocks being `128MB` by default in HDFS)
+  , but we can also ask for a higher number of partitions by passing a larger value. Note that we cannot have fewer
+  partitions than blocks.
+
+Apart from **text files**, Spark’s Java API also supports several other data formats:
+
+- `JavaSparkContext.wholeTextFiles()` lets us read a directory containing multiple small text files, and returns each of
+  them as **(filename, content)** pairs. This is in contrast with `textFile()`, which would return one record per line
+  in each file.
+- For [SequenceFiles](https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/SequenceFileInputFormat.html),
+  use SparkContext’s `sequenceFile[K, V]` method where `K` and `V` are the types of key and values in the file. These
+  should be subclasses of
+  Hadoop’s [Writable](https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/io/Writable.html) interface, like
+  [IntWritable](https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/io/IntWritable.html)
+  and [Text](https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/io/Text.html).
+- For other Hadoop `InputFormats`, we can use the `JavaSparkContext.hadoopRDD()` method, which takes an arbitrary
+  `JobConf` and input format class, key class and value class. Set these the same way we would for a Hadoop job with our
+  input source. We can also use `JavaSparkContext.newAPIHadoopRDD()` for `InputFormats` based on the “new” MapReduce
+  API (`org.apache.hadoop.mapreduce`).
+- `JavaRDD.saveAsObjectFile()` and `JavaSparkContext.objectFile()` support saving an RDD in a simple format consisting
+  of **serialized** Java objects. While this is not as efficient as specialized formats like **Avro**, it offers an easy
+  way to save any RDD.
+
+---
+
+
+
