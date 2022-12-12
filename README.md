@@ -29,6 +29,8 @@ Unify the processing of data in batches and real-time streaming.
 7. Spark RDD - External Datasets
 8. Spark RDD - Tuples
 9. Spark RDD - PairRDDs
+10. Spark RDD - FlatMaps
+11. Spark RDD - Filters
 
 ### Youtube
 
@@ -486,8 +488,8 @@ text occurs in a file:
 
 ```
 final var lines = sc.textFile("data.txt");
-final var pairs = lines.mapToPair(s -> new Tuple2(s, 1));
-final var counts = pairs.reduceByKey((a, b) -> a + b);
+final var pairs = lines.mapToPair(s -> new Tuple2<>(s, 1L));
+final var counts = pairs.reduceByKey(Long::sum);
 ```
 
 We could also use `counts.sortByKey()`, for example, to sort the pairs alphabetically, and finally `counts.collect()` to
@@ -497,4 +499,17 @@ When using custom objects as the key in key-value pair operations, we must be su
 accompanied by a matching `hashCode()` method.
 
 ---
+
+### Chapter 10. Spark RDD - FlatMaps
+
+Transformation: flatMap(func)
+
+> Similar to map, but each input item can be mapped to 0 or more output items
+> (so `func` should return a `Seq` or `Iterable` rather than a single item).
+
+As RDDs are immutable, after applying the `flatMap` transformation, new RDD is created.
+
+---
+
+### Chapter 11. Spark RDD - Filters
 
