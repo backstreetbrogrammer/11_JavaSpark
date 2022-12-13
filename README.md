@@ -509,7 +509,18 @@ Transformation: flatMap(func)
 
 As RDDs are immutable, after applying the `flatMap` transformation, new RDD is created.
 
+However, in functional programming-language jargon, the `flatMap` method lets us replace each value of a stream with
+another stream and then concatenates all the generated streams into a single stream.
+
 ---
 
 ### Chapter 11. Spark RDD - Filters
+
+Transformation: filter(func)
+
+> Return a new dataset formed by selecting those elements of the source on which `func` returns true.
+
+As RDDs are immutable, after applying the `filter` transformation, new RDD is created.
+
+---
 

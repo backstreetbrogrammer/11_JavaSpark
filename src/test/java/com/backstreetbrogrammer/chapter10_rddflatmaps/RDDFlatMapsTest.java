@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RDDFlatMapsTest {
 
@@ -30,5 +33,33 @@ public class RDDFlatMapsTest {
         sc.close();
     }
 
+
+    @Test
+    @DisplayName("Test flatMap() method in Java Streams")
+    void testFlatMapInJavaStreams() {
+        final var students = List.of("John", "Mary", "Peter");
+        final var favoriteLanguages = List.of("Java", "Python");
+
+         /*
+         Task: return pair of both the lists
+         For ex:
+         [("John", "Java"), ("John", "Python"), ("Mary", "Java"), ("Mary", "Python"), ("Peter", "Java"), ("Peter", "Python")]
+
+         Solution:
+         We could use two maps to iterate on the two lists and generate the pairs.
+         But this would return a Stream<Stream<String[]>>.
+         What we need to do is `flatten` the generated streams to result in a Stream<String[]>.
+         */
+
+        final var pairs
+                = students.stream()
+                          .flatMap(student -> favoriteLanguages.stream()
+                                                               .map(favoriteLanguage ->
+                                                                            new String[]{student, favoriteLanguage}))
+                          .collect(Collectors.toList());
+        assertEquals(6, pairs.size());
+
+        pairs.forEach(val -> System.out.printf("(%s,%s)%n", val[0], val[1]));
+    }
 
 }
