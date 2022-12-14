@@ -31,6 +31,7 @@ Unify the processing of data in batches and real-time streaming.
 9. Spark RDD - PairRDDs
 10. Spark RDD - FlatMaps
 11. Spark RDD - Filters
+12. Exercise 1 - Unique Word Count
 
 ### Youtube
 
@@ -151,7 +152,7 @@ disk only when the memory is full.
 #### Spark RDDs
 
 **RDD (Resilient Distributed Dataset)** is the fundamental data structure of Apache Spark which are an immutable
-collection of objects which computes on the different node of the cluster. Each and every dataset in Spark RDD is
+collection of objects which computes on the different nodes of the cluster. Each and every dataset in Spark RDD is
 logically partitioned across many servers so that they can be computed on different nodes of the cluster.
 
 RDD has these main features:
@@ -257,10 +258,14 @@ final var conf = new SparkConf().setAppName("SparkFirstProgram").setMaster("loca
 
 The `appName` parameter is a name for the application to show on the cluster UI.
 
-The `master` is a Spark, Mesos or YARN cluster URL, or a special “local” string to run in local mode. When running on a
-cluster, we will not want to hardcode master in the program, but rather launch the application with
-`spark-submit` and receive it there. However, for local testing and unit tests, we can pass “local” to run Spark
-in-process.
+The `master` is a
+[Spark, Mesos or YARN cluster URL](https://spark.apache.org/docs/latest/submitting-applications.html#master-urls), or a
+special “local” string to run in local mode. When running on a cluster, we will not want to hardcode master in the
+program, but rather launch the application
+with [spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html) and receive it there. However,
+for local testing and unit tests, we can pass “local” to run Spark in-process.
+
+`local[*]` means run Spark locally with as many worker threads as logical cores on the machine.
 
 2. Create a `JavaSparkContext` object which tells Spark how to access a cluster, by passing the `SparkConf` object to
    its constructor
@@ -521,6 +526,33 @@ Transformation: filter(func)
 > Return a new dataset formed by selecting those elements of the source on which `func` returns true.
 
 As RDDs are immutable, after applying the `filter` transformation, new RDD is created.
+
+---
+
+### Chapter 12. Exercise 1 - Unique Word Count
+
+#### Task: Count unique English words from the given file - numbers, punctuations, space, tabs, etc. should NOT be counted.
+
+Also, the words should be case-insensitive, i.e. "Java" and "java" should be counted same.
+
+Example output _(word, count)_ :
+
+```
+(someone,5)
+(therefor,2)
+(greater,5)
+(ratification,2)
+(full,14)
+(secure,4)
+(bailiffs,14)
+(old,7)
+(order,7)
+(carried,2)
+```
+
+Meaning that word "someone" appeared total 5 times in the given file.
+
+#### Bonus Task: Find the top 10 words with maximum counts
 
 ---
 
