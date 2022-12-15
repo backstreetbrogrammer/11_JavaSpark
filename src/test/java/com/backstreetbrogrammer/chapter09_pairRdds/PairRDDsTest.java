@@ -3,6 +3,8 @@ package com.backstreetbrogrammer.chapter09_pairRdds;
 import com.google.common.collect.Iterables;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -16,14 +18,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PairRDDsTest {
 
+    private JavaSparkContext sparkContext;
+
+    @BeforeEach
+    void setUp() {
+        final var sparkConf = new SparkConf().setAppName("PairRDDsTest").setMaster("local[*]");
+        sparkContext = new JavaSparkContext(sparkConf);
+    }
+
+    @AfterEach
+    void tearDown() {
+        sparkContext.close();
+    }
+
     @ParameterizedTest
     @MethodSource("getFilePaths")
     @DisplayName("Test mapToPair() method in Spark RDD")
     void testMapToPairInSparkRDD(final String testFilePath) {
-        final var conf = new SparkConf().setAppName("PairRDDsTest").setMaster("local[*]");
-        final var sc = new JavaSparkContext(conf);
-
-        final var myRdd = sc.textFile(testFilePath);
+        final var myRdd = sparkContext.textFile(testFilePath);
         System.out.printf("Total lines in file %d%n", myRdd.count());
 
         final var pairRDD = myRdd.mapToPair(line -> new Tuple2<>(line.length(), line));
@@ -31,18 +43,13 @@ public class PairRDDsTest {
 
         pairRDD.take(5).forEach(System.out::println);
         System.out.println("--------------------");
-
-        sc.close();
     }
 
     @ParameterizedTest
     @MethodSource("getFilePaths")
     @DisplayName("Test reduceByKey() method in Spark RDD")
     void testReduceByKeyInSparkRDD(final String testFilePath) {
-        final var conf = new SparkConf().setAppName("PairRDDsTest").setMaster("local[*]");
-        final var sc = new JavaSparkContext(conf);
-
-        final var lines = sc.textFile(testFilePath);
+        final var lines = sparkContext.textFile(testFilePath);
         System.out.printf("Total lines in file %d%n", lines.count());
 
         final var pairRDD = lines.mapToPair(line -> new Tuple2<>(line.length(), 1L));
@@ -53,8 +60,6 @@ public class PairRDDsTest {
                                        System.out.printf("Total strings of length %d are %d%n", tuple._1, tuple._2));
 
         System.out.println("--------------------");
-
-        sc.close();
     }
 
 
@@ -62,10 +67,7 @@ public class PairRDDsTest {
     @MethodSource("getFilePaths")
     @DisplayName("Test groupByKey() method in Spark RDD")
     void testGroupByKeyInSparkRDD(final String testFilePath) {
-        final var conf = new SparkConf().setAppName("PairRDDsTest").setMaster("local[*]");
-        final var sc = new JavaSparkContext(conf);
-
-        final var lines = sc.textFile(testFilePath);
+        final var lines = sparkContext.textFile(testFilePath);
         System.out.printf("Total lines in file %d%n", lines.count());
 
         final var pairRDD = lines.mapToPair(line -> new Tuple2<>(line.length(), 1L));
@@ -77,8 +79,6 @@ public class PairRDDsTest {
                                                          Iterables.size(tuple._2)));
 
         System.out.println("--------------------");
-
-        sc.close();
     }
 
     private static Stream<Arguments> getFilePaths() {

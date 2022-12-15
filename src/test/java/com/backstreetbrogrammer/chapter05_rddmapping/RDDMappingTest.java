@@ -3,9 +3,7 @@ package com.backstreetbrogrammer.chapter05_rddmapping;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -21,6 +19,8 @@ public class RDDMappingTest {
     private static final List<String> data = new ArrayList<>();
     private final int noOfIterations = 10;
 
+    private JavaSparkContext sparkContext;
+
     @BeforeAll
     static void beforeAll() {
         final var dataSize = 100_000;
@@ -30,12 +30,21 @@ public class RDDMappingTest {
         assertEquals(dataSize, data.size());
     }
 
+    @BeforeEach
+    void setUp() {
+        final var sparkConf = new SparkConf().setAppName("RDDMappingTest").setMaster("local[*]");
+        sparkContext = new JavaSparkContext(sparkConf);
+    }
+
+    @AfterEach
+    void tearDown() {
+        sparkContext.close();
+    }
+
     @Test
     @DisplayName("Test map operation using Spark RDD count() method")
     void testMapOperationUsingSparkRDDCount() {
-        final var conf = new SparkConf().setAppName("RDDMappingTest").setMaster("local[*]");
-        final var sc = new JavaSparkContext(conf);
-        final var myRdd = sc.parallelize(data);
+        final var myRdd = sparkContext.parallelize(data);
 
         final Instant start = Instant.now();
         for (int i = 0; i < noOfIterations; i++) {
@@ -45,16 +54,12 @@ public class RDDMappingTest {
         }
         final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
         System.out.printf("[Spark RDD] count() method time taken: %d ms%n%n", timeElapsed);
-
-        sc.close();
     }
 
     @Test
     @DisplayName("Test map operation using Spark RDD collect() method")
     void testMapOperationUsingSparkRDDCollect() {
-        final var conf = new SparkConf().setAppName("RDDMappingTest").setMaster("local[*]");
-        final var sc = new JavaSparkContext(conf);
-        final var myRdd = sc.parallelize(data);
+        final var myRdd = sparkContext.parallelize(data);
 
         final Instant start = Instant.now();
         for (int i = 0; i < noOfIterations; i++) {
@@ -64,16 +69,12 @@ public class RDDMappingTest {
         }
         final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
         System.out.printf("[Spark RDD] collect() method time taken: %d ms%n%n", timeElapsed);
-
-        sc.close();
     }
 
     @Test
     @DisplayName("Test map operation using Spark RDD mapReduce")
     void testMapOperationUsingSparkRDDMapReduce() {
-        final var conf = new SparkConf().setAppName("RDDMappingTest").setMaster("local[*]");
-        final var sc = new JavaSparkContext(conf);
-        final var myRdd = sc.parallelize(data);
+        final var myRdd = sparkContext.parallelize(data);
 
         final Instant start = Instant.now();
         for (int i = 0; i < noOfIterations; i++) {
@@ -84,8 +85,6 @@ public class RDDMappingTest {
         }
         final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
         System.out.printf("[Spark RDD] mapReduce time taken: %d ms%n%n", timeElapsed);
-
-        sc.close();
     }
 
 

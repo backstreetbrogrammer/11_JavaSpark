@@ -32,6 +32,8 @@ Unify the processing of data in batches and real-time streaming.
 10. Spark RDD - FlatMaps
 11. Spark RDD - Filters
 12. Exercise 1 - Unique Word Count
+13. Databricks and AWS EMR
+14. Spark RDD - Joins
 
 ### Youtube
 
@@ -333,7 +335,7 @@ final var sum = myRdd.reduce(Integer::sum);
 
 ### Chapter 05. Spark RDD - Mapping
 
-Transformation: map(func)
+Transformation: `map(func)`
 
 > Return a new distributed dataset formed by passing each element of the source through a function `func`.
 
@@ -507,7 +509,7 @@ accompanied by a matching `hashCode()` method.
 
 ### Chapter 10. Spark RDD - FlatMaps
 
-Transformation: flatMap(func)
+Transformation: `flatMap(func)`
 
 > Similar to map, but each input item can be mapped to 0 or more output items
 > (so `func` should return a `Seq` or `Iterable` rather than a single item).
@@ -521,7 +523,7 @@ another stream and then concatenates all the generated streams into a single str
 
 ### Chapter 11. Spark RDD - Filters
 
-Transformation: filter(func)
+Transformation: `filter(func)`
 
 > Return a new dataset formed by selecting those elements of the source on which `func` returns true.
 
@@ -555,4 +557,74 @@ Meaning that word "someone" appeared total 5 times in the given file.
 #### Bonus Task: Find the top 10 words with maximum counts
 
 ---
+
+### Chapter 13. Databricks and AWS EMR
+
+In production, there are always 2 choices to work with Big Data, Clusters and Apache Spark:
+
+- Databricks
+- AWS EMR (Elastic MapReduce) and AWS S3
+
+#### Databricks
+
+1. Create an account in Databricks, for the first time - we can create a 14-days trial
+   [free account](https://www.databricks.com/try-databricks#account)
+2. Databricks does NOT support the Java notebook execution directly. We can only run the notebook in Python, R, Scala
+   and SQL. However, we can create an executable jar of java code in our local computer and then upload the jar in the
+   Databricks cluster.
+3. In the Databricks cluster created - we can go to the **libraries** and upload the jar file as a library there
+4. Once uploaded, we need to open a **SCALA** notebook and import the java classes from the library and execute the
+   SCALA notebook.
+
+#### AWS EMR
+
+1. Create an account in AWS, for the first time - we can create a 1-year trial
+   [free account](https://aws.amazon.com/free)
+
+_work in progress_
+
+---
+
+### Chapter 14. Spark RDD - Joins
+
+Transformation: `join(otherDataset, [numPartitions])`
+
+When called on datasets of type `(K, V)` and `(K, W)`, returns a dataset of `(K, (V, W))` pairs with all pairs of
+elements for each key.
+
+**Outer joins** are supported through `leftOuterJoin()`, `rightOuterJoin()`, and `fullOuterJoin()`.
+
+#### Inner join
+
+> Joins two RDDs based on a common field K, and selects records that have matching values in these fields
+
+#### Left Outer join
+
+> Joins two RDDs based on a common field K, and selects records that have matching values in these fields and remaining
+> rows from the **left** RDD.
+
+#### Right Outer join
+
+> Joins two RDDs based on a common field K, and selects records that have matching values in these fields and remaining
+> rows from the **right** RDD.
+
+#### Full Outer join
+
+> Joins two RDDs based on a common field K, and selects records that have matching values in these fields and remaining
+> rows from **both** of the RDDs.
+
+#### Cartesian
+
+Transformation: `cartesian(otherDataset)`
+
+> When called on datasets of types T and U, returns a dataset of (T, U) pairs (all pairs of elements).
+
+---
+
+
+
+
+
+
+
 
