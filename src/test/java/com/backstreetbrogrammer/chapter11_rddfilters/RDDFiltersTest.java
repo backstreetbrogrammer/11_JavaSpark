@@ -14,23 +14,22 @@ public class RDDFiltersTest {
     @DisplayName("Test filter() method in Spark RDD")
     void testFilterInSparkRDD() {
         final var conf = new SparkConf().setAppName("RDDFiltersTest").setMaster("local[*]");
-        final var sc = new JavaSparkContext(conf);
+        try (final var sc = new JavaSparkContext(conf)) {
 
-        final String testFilePath = Path.of("src", "test", "resources", "magna-carta.txt.gz").toString();
-        final var lines = sc.textFile(testFilePath);
-        System.out.printf("Total lines in file %d%n", lines.count());
+            final String testFilePath = Path.of("src", "test", "resources", "magna-carta.txt.gz").toString();
+            final var lines = sc.textFile(testFilePath);
+            System.out.printf("Total lines in file %d%n", lines.count());
 
-        final var words = lines.flatMap(line -> List.of(line.split("\\s")).iterator());
-        System.out.printf("Total number of words in the file~>%d%n", words.count());
+            final var words = lines.flatMap(line -> List.of(line.split("\\s")).iterator());
+            System.out.printf("Total number of words in the file~>%d%n", words.count());
 
-        final var filteredWords = words.filter(word -> ((word != null) && (word.trim().length() > 0)));
-        System.out.printf("Total number of words after filtering~>%d%n", filteredWords.count());
+            final var filteredWords = words.filter(word -> ((word != null) && (word.trim().length() > 0)));
+            System.out.printf("Total number of words after filtering~>%d%n", filteredWords.count());
 
-        System.out.println("First few words:");
-        filteredWords.take(10).forEach(System.out::println);
-        System.out.println("--------------------");
-
-        sc.close();
+            System.out.println("First few words:");
+            filteredWords.take(10).forEach(System.out::println);
+            System.out.println("--------------------");
+        }
     }
 
 }

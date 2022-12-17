@@ -32,18 +32,17 @@ public class RDDReduceTest {
     @DisplayName("Test reduce operation using Spark RDD")
     void testReduceOperationUsingSparkRDD() {
         final var conf = new SparkConf().setAppName("RDDReduceTest").setMaster("local[*]");
-        final var sc = new JavaSparkContext(conf);
-        final var myRdd = sc.parallelize(data, 14);
+        try (final var sc = new JavaSparkContext(conf)) {
+            final var myRdd = sc.parallelize(data, 14);
 
-        final Instant start = Instant.now();
-        for (int i = 0; i < noOfIterations; i++) {
-            final var sum = myRdd.reduce(Double::sum);
-            System.out.println("[Spark RDD] SUM:" + sum);
+            final Instant start = Instant.now();
+            for (int i = 0; i < noOfIterations; i++) {
+                final var sum = myRdd.reduce(Double::sum);
+                System.out.println("[Spark RDD] SUM:" + sum);
+            }
+            final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
+            System.out.printf("[Spark RDD] time taken: %d ms%n%n", timeElapsed);
         }
-        final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
-        System.out.printf("[Spark RDD] time taken: %d ms%n%n", timeElapsed);
-
-        sc.close();
     }
 
     @Test

@@ -2,7 +2,9 @@ package com.backstreetbrogrammer.chapter06_rddprinting;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -15,8 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RDDPrintingTest {
 
+    private final SparkConf sparkConf = new SparkConf().setAppName("RDDPrintingTest").setMaster("local[*]");
+
     private static final List<Double> data = new ArrayList<>();
-    private JavaSparkContext sparkContext;
 
     @BeforeAll
     static void beforeAll() {
@@ -27,48 +30,43 @@ public class RDDPrintingTest {
         assertEquals(dataSize, data.size());
     }
 
-    @BeforeEach
-    void setUp() {
-        final var sparkConf = new SparkConf().setAppName("RDDPrintingTest").setMaster("local[*]");
-        sparkContext = new JavaSparkContext(sparkConf);
-    }
-
-    @AfterEach
-    void tearDown() {
-        sparkContext.close();
-    }
-
     @Test
     @DisplayName("Test printing Spark RDD elements using foreach() only")
     void testPrintingSparkRDDElementsUsingOnlyForeach() {
-        final var myRdd = sparkContext.parallelize(data);
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var myRdd = sparkContext.parallelize(data);
 
-        final Throwable exception = assertThrows(org.apache.spark.SparkException.class,
-                                                 () -> myRdd.foreach(System.out::println));
-        assertEquals(exception.getMessage(), "Task not serializable");
+            final Throwable exception = assertThrows(org.apache.spark.SparkException.class,
+                                                     () -> myRdd.foreach(System.out::println));
+            assertEquals(exception.getMessage(), "Task not serializable");
+        }
     }
 
 
     @Test
     @DisplayName("Test printing Spark RDD elements using forEach() with collect() method")
     void testPrintingSparkRDDElementsUsingForeachWithCollect() {
-        final var myRdd = sparkContext.parallelize(data);
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var myRdd = sparkContext.parallelize(data);
 
-        final Instant start = Instant.now();
-        myRdd.collect().forEach(System.out::println);
-        final long timeElapsed = Duration.between(start, Instant.now()).toMillis();
-        System.out.printf("[Spark RDD] printing all - time taken: %d ms%n%n", timeElapsed);
+            final Instant start = Instant.now();
+            myRdd.collect().forEach(System.out::println);
+            final long timeElapsed = Duration.between(start, Instant.now()).toMillis();
+            System.out.printf("[Spark RDD] printing all - time taken: %d ms%n%n", timeElapsed);
+        }
     }
 
     @Test
     @DisplayName("Test printing Spark RDD elements using forEach() with take() method")
     void testPrintingSparkRDDElementsUsingForeachWithTake() {
-        final var myRdd = sparkContext.parallelize(data);
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var myRdd = sparkContext.parallelize(data);
 
-        final Instant start = Instant.now();
-        myRdd.take(10).forEach(System.out::println);
-        final long timeElapsed = Duration.between(start, Instant.now()).toMillis();
-        System.out.printf("[Spark RDD] printing few - time taken: %d ms%n%n", timeElapsed);
+            final Instant start = Instant.now();
+            myRdd.take(10).forEach(System.out::println);
+            final long timeElapsed = Duration.between(start, Instant.now()).toMillis();
+            System.out.printf("[Spark RDD] printing few - time taken: %d ms%n%n", timeElapsed);
+        }
     }
 
 }

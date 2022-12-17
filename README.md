@@ -34,6 +34,7 @@ Unify the processing of data in batches and real-time streaming.
 12. Exercise 1 - Unique Word Count
 13. Databricks and AWS EMR
 14. Spark RDD - Joins
+15. Spark RDD - Persistence
 
 ### Youtube
 
@@ -49,7 +50,7 @@ Big data is a term that describes large, hard-to-manage volumes of data – both
 inundate businesses on a day-to-day basis.
 
 These data sets are so voluminous that traditional data processing software just can’t manage them. But these massive
-volumes of data can be used to address business problems we wouldn’t have been able to tackle before.
+volumes of data can be used to address business problems we would not have been able to tackle before.
 
 The three Vs of big data:
 
@@ -131,7 +132,7 @@ Key Features:
 
 - SQL analytics using **RDDs** and **SparkSQL**
 
-Execute fast, distributed ANSI SQL queries for dashboarding and ad-hoc reporting. Runs faster than most data warehouses.
+Execute fast, distributed ANSI SQL queries for dashboards and ad-hoc reporting. Runs faster than most data warehouses.
 
 - Machine learning using **SparkML**
 
@@ -147,9 +148,9 @@ Spark is a flexible alternative to MapReduce.
 MapReduce requires files to be stored only in HDFS, while Spark can work on data stored in a variety of formats like
 HDFS, AWS S3, Cassandra, HBase etc.
 
-Spark can perform operations up to 100X faster than MapReduce because MapReduce writes most of data to disk after each
-map and reduce operation; however Spark keeps most of the data in memory after each transformation. Spark will write to
-disk only when the memory is full.
+Spark can perform operations up to 100X faster than MapReduce because MapReduce writes most of the data to disk after
+each map and reduce operation; however Spark keeps most of the data in memory after each transformation. Spark will
+write to disk only when the memory is full.
 
 #### Spark RDDs
 
@@ -621,10 +622,57 @@ Transformation: `cartesian(otherDataset)`
 
 ---
 
+### Chapter 15. Spark RDD - Persistence
 
+In Spark, we can **persist** or **cache** a dataset in **memory** across operations.
 
+When we persist an RDD, each node stores any _partitions_ of it that it computes in memory and reuses them in other
+actions on that dataset (or datasets derived from it). This allows future actions to be much faster (often by more than
+10x). Caching is a key tool for iterative algorithms and fast interactive use.
 
+We can mark an RDD to be persisted using `persist()` or `cache()` methods on it.
 
+The first time it is computed in an **action**, it will be kept in memory on the nodes.
 
+Spark’s cache is **fault-tolerant** – if any partition of an RDD is lost, it will automatically be recomputed using the
+transformations that originally created it.
+
+In addition, each persisted RDD can be stored using a different _storage level_, allowing us, for example, to persist
+the dataset on **disk**, persist it in **memory** but as serialized Java objects (to save space), replicate it across
+nodes. These levels are set by passing a `StorageLevel` object to `persist()`.
+
+The `cache()` method is a shorthand for using the **default** storage level, which is `StorageLevel.MEMORY_ONLY` (store
+deserialized objects in memory).
+
+Spark also **automatically** persists some intermediate data in shuffle operations (e.g. `reduceByKey()`), even without
+users calling `persist()`. This is done to avoid recomputing the entire input if a node fails during the **shuffle**.
+
+It is recommended to call `persist()` on the resulting RDD if we plan to **reuse** it.
+
+#### Storage Level to chose
+
+Spark’s storage levels are meant to provide different trade-offs between memory usage and CPU efficiency.
+
+Here is the recommended approach:
+
+- If our RDDs fit comfortably with the default storage level (`MEMORY_ONLY`), leave them that way. This is the most
+  CPU-efficient option, allowing operations on the RDDs to run as fast as possible.
+
+- If not, try using `MEMORY_ONLY_SER` and selecting a fast serialization library to make the objects much more
+  space-efficient, but still reasonably fast to access.
+
+- Don’t spill to disk unless the functions that computed our datasets are expensive, or they filter a large amount of
+  the data. Otherwise, recomputing a partition may be as fast as reading it from disk.
+
+- Use the replicated storage levels if we want fast fault recovery (e.g. if using Spark to serve requests from a web
+  application). All the storage levels provide full fault tolerance by recomputing lost data, but the replicated ones
+  let us continue running tasks on the RDD without waiting to recompute a lost partition.
+
+#### Removing Data
+
+Spark automatically monitors cache usage on each node and drops out old data partitions in a **least-recently-used (
+LRU)** fashion. If we would like to manually remove an RDD instead of waiting for it to fall out of the cache, use the
+`RDD.unpersist()` method. Note that this method does not block by default. To block until resources are freed, specify
+`blocking=true` when calling this method.
 
 

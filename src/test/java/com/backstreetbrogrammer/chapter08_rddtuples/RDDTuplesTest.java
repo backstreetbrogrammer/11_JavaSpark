@@ -2,8 +2,6 @@ package com.backstreetbrogrammer.chapter08_rddtuples;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -17,31 +15,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RDDTuplesTest {
 
-    private JavaSparkContext sparkContext;
-
-    @BeforeEach
-    void setUp() {
-        final var sparkConf = new SparkConf().setAppName("RDDTuplesTest").setMaster("local[*]");
-        sparkContext = new JavaSparkContext(sparkConf);
-    }
-
-    @AfterEach
-    void tearDown() {
-        sparkContext.close();
-    }
+    private final SparkConf sparkConf = new SparkConf().setAppName("RDDTuplesTest").setMaster("local[*]");
 
     @ParameterizedTest
     @MethodSource("getFilePaths")
     @DisplayName("Test Tuples in Spark RDD")
     void testTuplesInSparkRDD(final String testFilePath) {
-        final var myRdd = sparkContext.textFile(testFilePath);
-        System.out.printf("Total lines in file %d%n", myRdd.count());
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var myRdd = sparkContext.textFile(testFilePath);
+            System.out.printf("Total lines in file %d%n", myRdd.count());
 
-        final var tuple2JavaRDD = myRdd.map(line -> new Tuple2<>(line, line.length()));
-        assertEquals(myRdd.count(), tuple2JavaRDD.count());
+            final var tuple2JavaRDD = myRdd.map(line -> new Tuple2<>(line, line.length()));
+            assertEquals(myRdd.count(), tuple2JavaRDD.count());
 
-        tuple2JavaRDD.take(10).forEach(System.out::println);
-        System.out.println("--------------------");
+            tuple2JavaRDD.take(10).forEach(System.out::println);
+            System.out.println("--------------------");
+        }
     }
 
     private static Stream<Arguments> getFilePaths() {
