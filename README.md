@@ -112,7 +112,7 @@ amount of data could convey half or incomplete information.
 Big data can not be processed or stored in a local system or a single node. It requires multiple machines or nodes to
 store / process it.
 
-**Master Node => Slave nodes**
+**Master Node => Worker nodes**
 
 A local single node will use the computation sources (CPU, cores) and storage (memory, hard disk) of a single machine
 only. Only **vertical scaling** is possible which means we can add powerful CPU or memory to a single machine but there
@@ -135,13 +135,16 @@ Hadoop uses **Hadoop Distributed File System (HDFS)** which is a distributed, sc
 in Java for the Hadoop framework and allows user to work with large data sets. It also duplicates blocks of data for
 **fault tolerance**.
 
-HDFS uses MapReduce which allows computations on that data.
+HDFS uses **MapReduce** which allows computations on that data.
 
-HDFS uses blocks of data of default size 128 MB and replicates it multiple times to the slave nodes for fault tolerance.
+HDFS uses blocks of data of default size **128 MB** and replicates it multiple times to the slave nodes for fault
+tolerance.
 
 **MapReduce** is a way of splitting a computational task to a distributed set of files such as HDFS. It consists of a
 **Job Tracker** at **Master** Node and multiple **Task Trackers** in the **slave** nodes. Job Tracker sends code to run
 on the Task Trackers. The Task Trackers allocate CPU and memory for the tasks and monitor the tasks on the worker nodes.
+
+![MapReduce](MapReduce.png)
 
 To summarize,
 
