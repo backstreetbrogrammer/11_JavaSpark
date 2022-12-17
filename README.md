@@ -20,6 +20,8 @@ Unify the processing of data in batches and real-time streaming.
 
 ## Table of contents
 
+### Part I - Spark RDD
+
 1. The Big Picture
 2. Project Setup - Maven
 3. Spark RDD - First Program
@@ -35,6 +37,12 @@ Unify the processing of data in batches and real-time streaming.
 13. Databricks and AWS EMR
 14. Spark RDD - Joins
 15. Spark RDD - Persistence
+
+### Part II - Spark SQL
+
+### Part III - Spark ML
+
+### Part IV - Spark Streaming
 
 ### Youtube
 
@@ -52,7 +60,20 @@ inundate businesses on a day-to-day basis.
 These data sets are so voluminous that traditional data processing software just can’t manage them. But these massive
 volumes of data can be used to address business problems we would not have been able to tackle before.
 
-The three Vs of big data:
+![Big Data](BigData.png)
+
+| Name | Value (10^) | Value (2^) |
+| ----------- |-------------|------------|
+| kilobyte (kB) | 10^3        | 2^10       |
+| megabyte (MB)    | 10^6        | 2^20       |
+| gigabyte (GB)    | 10^9        | 2^30       |
+| terabyte (TB)    | 10^12       | 2^40       |
+| petabyte (PB)    | 10^15       | 2^50       |
+| exabyte (EB)    | 10^18       | 2^60       |
+| zettabyte (ZB) | 10^21       | 2^70       |
+| yottabyte (YB) | 10^24       | 2^80       |
+
+The **5V's** of Big Data:
 
 ###### Volume
 
@@ -73,16 +94,18 @@ relational database. With the rise of big data, data comes in new unstructured d
 semi-structured data types, such as text, audio, and video, require additional preprocessing to derive meaning and
 support metadata.
 
-| Name | Value (10^) | Value (2^) |
-| ----------- |-------------|------------|
-| kilobyte (kB) | 10^3        | 2^10       |
-| megabyte (MB)    | 10^6        | 2^20       |
-| gigabyte (GB)    | 10^9        | 2^30       |
-| terabyte (TB)    | 10^12       | 2^40       |
-| petabyte (PB)    | 10^15       | 2^50       |
-| exabyte (EB)    | 10^18       | 2^60       |
-| zettabyte (ZB) | 10^21       | 2^70       |
-| yottabyte (YB) | 10^24       | 2^80       |
+###### Value
+
+The bulk of data having no Value is of no good to the company, unless we turn it into something useful. Data in itself
+is of no use or importance, but it needs to be converted into something valuable to extract information. Hence, we can
+state that Value is the most important V of all the 5V’s.
+
+###### Veracity
+
+Veracity refers to inconsistencies and uncertainty in data, that is data which is available can sometimes get messy and
+quality and accuracy are difficult to control. Big Data is also variable because of the multitude of data dimensions
+resulting from multiple disparate data types and sources. Example: Data in bulk could create confusion whereas less
+amount of data could convey half or incomplete information.
 
 #### Local versus Distributed Systems
 
@@ -99,6 +122,8 @@ important data in cloud or separate disk.
 A distributed system has access to the computation sources (CPU, cores) and storage (memory, hard disk) across a number
 of machines connected through a network. **Horizontal scaling** is easier by just adding new nodes or systems to the
 distributed system. It also supports **fault tolerance**, if one machine fails, the whole network can still go on.
+
+![Distributed System](DistributedSystem.png)
 
 #### Apache Hadoop and MapReduce
 
@@ -148,15 +173,17 @@ Spark is a flexible alternative to MapReduce.
 MapReduce requires files to be stored only in HDFS, while Spark can work on data stored in a variety of formats like
 HDFS, AWS S3, Cassandra, HBase etc.
 
-Spark can perform operations up to 100X faster than MapReduce because MapReduce writes most of the data to disk after
-each map and reduce operation; however Spark keeps most of the data in memory after each transformation. Spark will
-write to disk only when the memory is full.
+Spark can perform operations up to 100X faster than **MapReduce** because MapReduce writes most of the data to disk
+after each map and reduce operation; however Spark keeps most of the data in memory after each transformation. Spark
+will write to disk only when the memory is full.
 
 #### Spark RDDs
 
 **RDD (Resilient Distributed Dataset)** is the fundamental data structure of Apache Spark which are an immutable
 collection of objects which computes on the different nodes of the cluster. Each and every dataset in Spark RDD is
 logically partitioned across many servers so that they can be computed on different nodes of the cluster.
+
+![Spark Architecture](SparkDiagram.png)
 
 RDD has these main features:
 
@@ -169,8 +196,8 @@ RDD has these main features:
 RDDs support 2 kinds of operations:
 
 1. **Transformation** – Spark RDD transformation is a function that produces new RDD from the existing RDDs. The
-   transformer takes RDD as input and produces one or more RDD as output. Transformations are lazy in nature i.e., they
-   get execute when we call an action.
+   transformer takes RDD as input and produces one or more RDD as output. Transformations are **lazy** in nature i.e.,
+   they get execute when we call an action.
 
 2. **Action** – transformations create RDDs from each other, but when we want to work with the actual data set, at that
    point action is performed. Thus, Actions are Spark RDD operations that give non-RDD values. The values of action are
@@ -180,8 +207,6 @@ An action is one of the ways of sending data from **Executor** to the driver.
 
 **Executors** are agents that are responsible for executing a task. While the driver is a JVM process that coordinates
 workers and execution of the task. Some actions of Spark are count and collect.
-
-![Spark Architecture](SparkDiagram.png)
 
 ---
 
