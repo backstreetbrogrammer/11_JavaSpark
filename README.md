@@ -255,7 +255,7 @@ Please clone the entire repo because doing that will help to use any version of 
 4. Edit `Application` and `Junit` templates in IntelliJ and add VM arguments as:
 
 ```
--Dhadoop.home.dir=C:\\Users\\rishi\\Downloads\\BuildWithTech\\winutils\\hadoop-3.2.2
+-Dhadoop.home.dir=<path to local dir where repo is cloned>\\winutils\\hadoop-3.2.2
 ```
 
 ---
@@ -330,11 +330,17 @@ final var min = myRdd.reduce(Integer::min);
 final var sum = myRdd.reduce(Integer::sum);
 ```
 
-One important parameter for parallel collections is the number of partitions to cut the dataset into. Spark will run one
-task for each partition of the cluster.
+One important parameter for parallel collections is the number of **partitions** to cut the dataset into. Spark will run
+one task for each partition of the cluster.
 
 We may want 2-4 partitions for each CPU in the cluster. Spark tries to set the number of partitions automatically based
 on our cluster.
+
+We can get the number of partitions being used by calling this method:
+
+```
+myRdd.getNumPartitions()
+```
 
 However, we can also set it manually by passing it as a second parameter to parallelize() method.
 
