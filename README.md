@@ -34,9 +34,15 @@ Unify the processing of data in batches and real-time streaming.
 10. Spark RDD - FlatMaps
 11. Spark RDD - Filters
 12. Exercise 1 - Unique Word Count
-13. Databricks and AWS EMR
+13. Spark RDD - Closures and Shared Variables
 14. Spark RDD - Joins
 15. Spark RDD - Persistence
+16. Spark RDD - Shuffles
+17. Exercises and Solutions
+18. Spark RDD - Submitting applications
+19. Databricks and AWS EMR
+20. Introduction to Kryo Serialization
+21. Tuning Spark
 
 ### Part II - Spark SQL
 
@@ -180,13 +186,40 @@ Spark can perform operations up to 100X faster than **MapReduce** because MapRed
 after each map and reduce operation; however Spark keeps most of the data in memory after each transformation. Spark
 will write to disk only when the memory is full.
 
+#### Cluster Mode Overview
+
+![Spark Architecture](SparkDiagram.png)
+
+Spark applications run as independent sets of processes on a cluster, coordinated by the `SparkContext` object in our
+`main` program (called the `driver` program).
+
+Specifically, to run on a cluster, the `SparkContext` can connect to several types of cluster managers (either Spark’s
+own `standalone` cluster manager, `Mesos`, `YARN` or `Kubernetes`), which allocate resources across applications. Once
+connected, Spark acquires executors on nodes in the cluster, which are processes that run computations and store data
+for our application. Next, it sends our application code (defined by JAR or Python files passed to `SparkContext`) to
+the executors. Finally, `SparkContext` sends tasks to the executors to run.
+
+To summarize,
+
+- Each application gets its own executor processes, which stay up for the duration of the whole application and run
+  tasks in multiple threads. This has the benefit of isolating applications from each other, on both the scheduling
+  side (each driver schedules its own tasks) and executor side (tasks from different applications run in **different**
+  JVMs). However, it also means that data cannot be shared across different Spark applications (instances
+  of `SparkContext`) without writing it to an external storage system.
+- Spark is agnostic to the underlying cluster manager. As long as it can acquire executor processes, and these
+  communicate with each other, it is relatively easy to run it even on a cluster manager that also supports other
+  applications (e.g. Mesos/YARN/Kubernetes).
+- The driver program must listen for and accept incoming connections from its executors throughout its lifetime. As
+  such, the driver program must be network addressable from the worker nodes.
+- Because the driver schedules tasks on the cluster, it should be run close to the worker nodes, preferably on the same
+  local area network. If we’d like to send requests to the cluster remotely, it’s better to open an RPC to the driver
+  and have it submit operations from nearby than to run a driver far away from the worker nodes.
+
 #### Spark RDDs
 
 **RDD (Resilient Distributed Dataset)** is the fundamental data structure of Apache Spark which are an immutable
 collection of objects which computes on the different nodes of the cluster. Each and every dataset in Spark RDD is
 logically partitioned across many servers so that they can be computed on different nodes of the cluster.
-
-![Spark Architecture](SparkDiagram.png)
 
 RDD has these main features:
 
