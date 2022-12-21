@@ -626,30 +626,90 @@ Meaning that word "someone" appeared total 5 times in the given file.
 
 ---
 
-### Chapter 13. Databricks and AWS EMR
+### Chapter 13. Spark RDD - Closures and Shared Variables
 
-In production, there are always 2 choices to work with Big Data, Clusters and Apache Spark:
+A `closure` is an instance of a **function** that can reference non-local variables of that **function** with no
+restrictions.
 
-- Databricks
-- AWS EMR (Elastic MapReduce) and AWS S3
+For example, a closure could be passed as argument to another function. It could also access and modify variables
+defined outside its scope.
 
-#### Databricks
+#### Understanding closure concept in Java
 
-1. Create an account in Databricks, for the first time - we can create a 14-days trial
-   [free account](https://www.databricks.com/try-databricks#account)
-2. Databricks does NOT support the Java notebook execution directly. We can only run the notebook in Python, R, Scala
-   and SQL. However, we can create an executable jar of java code in our local computer and then upload the jar in the
-   Databricks cluster.
-3. In the Databricks cluster created - we can go to the **libraries** and upload the jar file as a library there
-4. Once uploaded, we need to open a **SCALA** notebook and import the java classes from the library and execute the
-   SCALA notebook.
+Java lambdas and anonymous classes do something similar to closures: they can be passed as argument to methods and can
+access variables outside their scope.
 
-#### AWS EMR
+But they have a restriction: they can’t modify the content of local variables of a method in which the lambda is
+defined. Those variables have to be `final` or **effectively final**. It helps to think that lambdas close over values
+rather than variables.
 
-1. Create an account in AWS, for the first time - we can create a 1-year trial
-   [free account](https://aws.amazon.com/free)
+This restriction exists because local variables live on the `stack` and are implicitly confined to the thread they’re
+in. Allowing capture of **mutable** local variables opens new thread unsafe possibilities, which are undesirable
+(instance variables are fine because they live on the `heap`, which is shared across threads).
 
-_work in progress_
+Example:
+
+Following code will NOT compile as `String` **name** variable is not `final` or **effectively final**:
+
+```
+String name = "John";
+Runnable r = () -> System.out.println(name); // WILL NOT COMPILE
+name = "Betty";
+```
+
+#### Understanding closure concept in Spark
+
+We need to understand the scope and life cycle of variables and methods when executing code across a cluster. RDD
+operations that modify variables outside their scope can be a frequent source of confusion.
+
+Example:
+
+Following code will NOT compile as `int` **sum** variable is not `final` or **effectively final**:
+
+```
+final var data = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+final var myRdd = sparkContext.parallelize(data);
+int sum = 0;
+myRdd.foreach(x -> sum += x); // WILL NOT COMPILE
+System.out.printf("Total sum: %d%n", sum);
+```
+
+To execute jobs, Spark breaks up the processing of RDD operations into **tasks**, each of which is executed by an
+**executor**. Prior to execution, Spark computes the task’s `closure`. The `closure` are those variables and methods
+which must be visible for the executor to perform its computations on the RDD (in this case `foreach()`). This closure
+is **serialized** and sent to each executor.
+
+The variables within the closure sent to each executor are now copies and thus, when `sum` is referenced within the
+`foreach()` function, it’s no longer the `sum` on the driver node. There is still a `sum` in the memory of the driver
+node but this is no longer visible to the executors! The executors only see the **copy** from the serialized closure.
+Thus, the final value of `sum` will still be **zero** since all operations on `sum` were referencing the value within
+the serialized closure.
+
+In **local** mode, in some circumstances, the `foreach()` function will actually execute within the same JVM as the
+driver and executors will reference the same original `sum`, and may actually update it.
+
+To ensure well-defined behavior in these sorts of scenarios one should use an `Accumulator`.
+
+**Accumulators** in Spark are used specifically to provide a mechanism for safely updating a variable when execution is
+split up across worker nodes in a cluster.
+
+In general, closures - constructs like loops or locally defined methods, should not be used to mutate some global state.
+Spark does not define or guarantee the behavior of mutations to objects referenced from outside of closures. Some code
+that does this may work in local mode, but that’s just by accident and such code will not behave as expected in
+distributed mode. Use an **Accumulator** instead if some global aggregation is needed.
+
+#### Accumulators
+
+Accumulators are variables that are only “added” to through an associative and commutative operation and can therefore
+be efficiently supported in parallel. They can be used to implement counters (as in MapReduce) or sums. Spark natively
+supports accumulators of **numeric** types, and programmers can add support for new types.
+
+A **numeric** accumulator can be created by calling `SparkContext.longAccumulator()`
+or `SparkContext.doubleAccumulator()` to accumulate values of type `Long` or `Double`, respectively. Tasks running on a
+cluster can then add to it using the `add()` method. However, they **cannot** read its **value**. Only the driver
+program can read the accumulator’s value, using its `value()` method.
+
+
 
 ---
 
@@ -742,4 +802,29 @@ LRU)** fashion. If we would like to manually remove an RDD instead of waiting fo
 `RDD.unpersist()` method. Note that this method does not block by default. To block until resources are freed, specify
 `blocking=true` when calling this method.
 
+---
 
+### Chapter 19. Databricks and AWS EMR
+
+In production, there are always 2 choices to work with Big Data, Clusters and Apache Spark:
+
+- Databricks
+- AWS EMR (Elastic MapReduce) and AWS S3
+
+#### Databricks
+
+1. Create an account in Databricks, for the first time - we can create a 14-days trial
+   [free account](https://www.databricks.com/try-databricks#account)
+2. Databricks does NOT support the Java notebook execution directly. We can only run the notebook in Python, R, Scala
+   and SQL. However, we can create an executable jar of java code in our local computer and then upload the jar in the
+   Databricks cluster.
+3. In the Databricks cluster created - we can go to the **libraries** and upload the jar file as a library there
+4. Once uploaded, we need to open a **SCALA** notebook and import the java classes from the library and execute the
+   SCALA notebook.
+
+#### AWS EMR
+
+1. Create an account in AWS, for the first time - we can create a 1-year trial
+   [free account](https://aws.amazon.com/free)
+
+_work in progress_
