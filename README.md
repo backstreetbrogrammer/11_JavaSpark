@@ -277,19 +277,23 @@ Complete `pom.xml` can be found at Github:
 
 #### Git clone Hadoop to local
 
-1. Clone this repo: `https://github.com/cdarlint/winutils` in Windows machine.
-
-Please clone the entire repo because doing that will help to use any version of `winutils.exe`
-
+1. Clone this repo: `https://github.com/cdarlint/winutils` in Windows machine. Please clone the entire repo because
+   doing that will help to use any version of `winutils.exe`
 2. Set `HADOOP_HOME` environment variable to the root path of the latest version
-
 3. Add to the `PATH` environment, the `%HADOOP_HOME%\bin`
-
 4. Edit `Application` and `Junit` templates in IntelliJ and add VM arguments as:
 
 ```
 -Dhadoop.home.dir=<path to local dir where repo is cloned>\\winutils\\hadoop-3.2.2
 ```
+
+#### Download Apache Spark to local
+
+1. Download Apache Spark version 3.2.2 from [spark official site](https://archive.apache.org/dist/spark/spark-3.2.2/)
+2. Only download Spark zipped file - `spark-3.2.2.tgz`
+3. Unzip the file to local folder - `tar -zxvf spark-3.2.2.tgz`
+4. Set `SPARK_HOME` environment variable to `<downloaded folder>\spark-3.2.2`
+5. Add to the `PATH` environment, the `%SPARK_HOME%\bin`
 
 ---
 
@@ -379,6 +383,12 @@ However, we can also set it manually by passing it as a second parameter to para
 
 ```
 sc.parallelize(data, 10)
+```
+
+Spark UI can be viewed in browser using default port of 4040:
+
+```
+http://localhost:4040/
 ```
 
 ---
@@ -709,7 +719,15 @@ or `SparkContext.doubleAccumulator()` to accumulate values of type `Long` or `Do
 cluster can then add to it using the `add()` method. However, they **cannot** read its **value**. Only the driver
 program can read the accumulator’s value, using its `value()` method.
 
+For accumulator updates performed inside `actions` only, Spark guarantees that each task’s update to the accumulator
+will only be applied once, i.e. restarted tasks will not update the value.
 
+In `transformations`, users should be aware of that each task’s update may be applied more than once if tasks or job
+stages are re-executed.
+
+Accumulators do not change the `lazy` evaluation model of Spark. If they are being updated within an operation on an
+RDD, their value is only updated once that RDD is computed as part of an action. Consequently, accumulator updates are
+not guaranteed to be executed when made within a lazy transformation like `map()`.
 
 ---
 
