@@ -5,7 +5,9 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -123,24 +125,50 @@ public class RDDClosuresAccumulatorsTest {
             assertTrue(positionAccumulator.name().nonEmpty());
             assertEquals("myPositionAcc", positionAccumulator.name().get());
 
-            final var trade1 = new Trade("AAPL", 1000L, 50.1D, 100, Side.BUY);
-            final var trade2 = new Trade("META", 2000L, 94.8D, 200, Side.SHORT_SELL);
-            final var trade3 = new Trade("AAPL", 3000L, 52.4D, 300, Side.BUY);
-            final var trade4 = new Trade("AAPL", 4000L, 53.2D, 300, Side.SELL);
-            final var trade5 = new Trade("META", 5000L, 93.6D, 200, Side.BUY);
+            final var trade1 = new Trade("AAPL", 1000L, 50D, 100, Side.BUY);
+            final var trade2 = new Trade("META", 2000L, 90D, 200, Side.SHORT_SELL);
+            final var trade3 = new Trade("AAPL", 3000L, 51D, 100, Side.BUY);
+            final var trade4 = new Trade("AAPL", 4000L, 52D, 200, Side.SELL);
+            final var trade5 = new Trade("META", 5000L, 80D, 200, Side.BUY);
+            final var trade6 = new Trade("TSLA", 6000L, 100D, 10, Side.BUY);
 
             final var trades
-                    = List.of(trade1, trade2, trade3, trade4, trade5);
+                    = List.of(trade1, trade2, trade3, trade4, trade5, trade6);
 
             final var myRdd = sparkContext.parallelize(trades);
-            myRdd.foreach(positionAccumulator::add); // spark.eventLog.enabled = false
-            assertFalse(positionAccumulator.isZero());
+            myRdd.foreach(positionAccumulator::add);
 
-            assertEquals(5L, positionAccumulator.count());
-            assertEquals(4530.0D, positionAccumulator.sum());
+            assertFalse(positionAccumulator.isZero());
+            assertEquals(6L, positionAccumulator.count());
+            assertEquals(1300.0D, positionAccumulator.profit());
+
+            positionAccumulator.getStockPosition()
+                               .forEach((stock, position) ->
+                                                System.out.printf("Stock %s has total %d position%n", stock,
+                                                                  position));
 
             positionAccumulator.reset();
             assertTrue(positionAccumulator.isZero());
         }
+    }
+
+    @Test
+    @DisplayName("Test merging of 2 maps in Java")
+    void mergeTwoMaps() {
+        final Map<String, Double> stockPosition1 = new HashMap<>() {{
+            put("AAPL", 100D);
+            put("META", 200D);
+            put("TSLA", 100D);
+        }};
+
+        final Map<String, Double> stockPosition2 = new HashMap<>() {{
+            put("AAPL", 100D);
+            put("TSLA", 100D);
+            put("GOOGL", 200D);
+        }};
+
+        stockPosition2.forEach((stock, position) -> stockPosition1.merge(stock, position, Double::sum));
+        stockPosition1.forEach((stock, position) -> System.out.printf("Stock %s has total %f position%n", stock,
+                                                                      position));
     }
 }

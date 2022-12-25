@@ -729,6 +729,12 @@ Accumulators do not change the `lazy` evaluation model of Spark. If they are bei
 RDD, their value is only updated once that RDD is computed as part of an action. Consequently, accumulator updates are
 not guaranteed to be executed when made within a lazy transformation like `map()`.
 
+We can also create our own accumulators by subclassing `AccumulatorV2`. The `AccumulatorV2` abstract class has several
+methods which one has to override: `reset()` for resetting the accumulator to zero, `add()` for adding another value
+into the accumulator, `merge()` for merging another same-type accumulator into this one, etc. Other methods that must be
+overridden are contained in
+the [API documentation](https://spark.apache.org/docs/latest/api/scala/org/apache/spark/util/AccumulatorV2.html).
+
 ---
 
 ### Chapter 14. Spark RDD - Joins

@@ -83,7 +83,11 @@ public class Trade implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final Trade trade = (Trade) o;
-        return time == trade.time && Double.compare(trade.executedPrice, executedPrice) == 0 && executedQuantity == trade.executedQuantity && securityId.equals(trade.securityId) && side == trade.side;
+        return time == trade.time
+                && Double.compare(trade.executedPrice, executedPrice) == 0
+                && executedQuantity == trade.executedQuantity
+                && securityId.equals(trade.securityId)
+                && side == trade.side;
     }
 
     @Override
