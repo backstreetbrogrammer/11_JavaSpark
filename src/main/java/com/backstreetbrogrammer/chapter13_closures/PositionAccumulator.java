@@ -6,6 +6,7 @@ import org.apache.spark.util.AccumulatorV2;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Deprecated
 public class PositionAccumulator extends AccumulatorV2<Trade, Trade> {
     private final Map<String, Integer> stockPosition = new ConcurrentHashMap<>();
 
