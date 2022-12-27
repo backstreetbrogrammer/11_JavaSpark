@@ -23,26 +23,27 @@ Unify the processing of data in batches and real-time streaming.
 ### Part I - Spark RDD
 
 1. The Big Picture
-2. Project Setup - Maven
+2. Spark Installation and IntelliJ Project Setup
 3. Spark RDD - First Program
-4. Spark RDD - Reduces
-5. Spark RDD - Mapping
-6. Spark RDD - Printing elements
-7. Spark RDD - External Datasets
-8. Spark RDD - Tuples
-9. Spark RDD - PairRDDs
-10. Spark RDD - FlatMaps
-11. Spark RDD - Filters
-12. Exercise 1 - Unique Word Count
-13. Spark RDD - Closures and Shared Variables
-14. Spark RDD - Joins
-15. Spark RDD - Persistence
-16. Spark RDD - Shuffles
-17. Exercises and Solutions
-18. Spark RDD - Submitting applications
-19. Databricks and AWS EMR
-20. Introduction to Kryo Serialization
-21. Tuning Spark
+4. Create RDD using parallelize()
+5. Create RDD using External Datasets
+6. Spark RDD - Reduces
+7. Spark RDD - Mapping
+8. Spark RDD - Printing elements
+10. Spark RDD - Tuples
+11. Spark RDD - PairRDDs
+12. Spark RDD - FlatMaps
+13. Spark RDD - Filters
+14. Exercise 1 - Unique Word Count
+15. Spark RDD - Closures and Shared Variables
+16. Spark RDD - Joins
+17. Spark RDD - Persistence
+18. Spark RDD - Shuffles
+19. Exercises and Solutions
+20. Spark RDD - Submitting applications
+21. Databricks and AWS EMR
+22. Introduction to Kryo Serialization
+23. Tuning Spark
 
 ### Part II - Spark SQL
 
@@ -246,7 +247,86 @@ workers and execution of the task. Some actions of Spark are count and collect.
 
 ---
 
-### Chapter 02. Project Setup - Maven
+### Chapter 02. Spark Installation and IntelliJ Project Setup
+
+#### Download Apache Spark and Hadoop
+
+1. Download Apache Spark version 3.3.1 from [spark official site](https://spark.apache.org/downloads.html)
+2. Download Spark zipped file
+   [spark-3.3.1-bin-hadoop3.tgz](https://www.apache.org/dyn/closer.lua/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz)
+3. Unzip the file to local folder - `tar -zxvf spark-3.3.1-bin-hadoop3.tgz`
+4. Set `SPARK_HOME` environment variable to `<downloaded folder>\spark-3.3.1-bin-hadoop3`
+5. Set `HADOOP_HOME` environment variable to `<downloaded folder>\spark-3.3.1-bin-hadoop3`
+6. Add to the `PATH` environment, the `%SPARK_HOME%\bin`
+7. Add to the `PATH` environment, the `%HADOOP_HOME%\bin`
+
+#### Download winutils.exe (only for Windows)
+
+Download [winutils.exe](https://github.com/steveloughran/winutils/blob/master/hadoop-3.0.0/bin/winutils.exe) and place
+it in local `%SPARK_HOME%\bin` folder.
+
+#### Verify Spark installation
+
+1. Open Windows command prompt `cmd` as **Administrator**
+2. Navigate to folder `%SPARK_HOME%\bin` by typing command: `cd %SPARK_HOME%\bin`
+3. Launch spark shell: `spark-shell2.cmd`
+4. Output will display lots of information like log level, Spark/Scala/Java version, Spark Context Web UI, Spark
+   context, Spark session objects, etc.
+5. Type few commands to learn some basics
+
+- Spark Session (can be multiple per JVM)
+
+```
+scala> spark
+res1: org.apache.spark.sql.SparkSession = org.apache.spark.sql.SparkSession@d6db63e
+```
+
+- Spark Context (1 per JVM)
+
+```
+scala> sc
+res2: org.apache.spark.SparkContext = org.apache.spark.SparkContext@4da86d09
+```
+
+- Create Spark RDD
+
+```
+scala> val myRdd = spark.sparkContext.parallelize(Seq(5,4,3,2,1))
+myRdd: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[0] at parallelize at <console>:22
+```
+
+- Print the above RDD
+
+```
+scala> myRdd.foreach(println)
+4
+3
+2
+1
+5
+```
+
+- Count number of partitions in RDD
+
+```
+scala> myRdd.getNumPartitions
+res5: Int = 4
+```
+
+- Count RDD elements
+
+```
+scala> myRdd.count
+res6: Long = 5
+```
+
+- Exit Spark Shell
+
+```
+scala> :quit
+```
+
+#### IntelliJ Project Setup - Maven
 
 We can create a Maven project and add spark dependencies.
 
@@ -266,34 +346,17 @@ We can create a Maven project and add spark dependencies.
 <dependency>
     <groupId>org.apache.hadoop</groupId>
     <artifactId>hadoop-hdfs</artifactId>
-    <version>3.3.2</version>
+    <version>3.3.4</version>
 </dependency>
 ```
 
-Latest apache spark version as of this writing is **3.2.2**
+Latest apache spark version as of this writing is **3.3.1**
 
 Complete `pom.xml` can be found at Github:
 [pom.xml](https://github.com/backstreetbrogrammer/11_JavaSpark/pom.xml)
 
-#### Git clone Hadoop to local
+Run Maven Verify command to ensure Maven setup is complete: `mvn verify`
 
-1. Clone this repo: `https://github.com/cdarlint/winutils` in Windows machine. Please clone the entire repo because
-   doing that will help to use any version of `winutils.exe`
-2. Set `HADOOP_HOME` environment variable to the root path of the latest version
-3. Add to the `PATH` environment, the `%HADOOP_HOME%\bin`
-4. Edit `Application` and `Junit` templates in IntelliJ and add VM arguments as:
-
-```
--Dhadoop.home.dir=<path to local dir where repo is cloned>\\winutils\\hadoop-3.2.2
-```
-
-#### Download Apache Spark to local
-
-1. Download Apache Spark version 3.2.2 from [spark official site](https://archive.apache.org/dist/spark/spark-3.2.2/)
-2. Only download Spark zipped file - `spark-3.2.2.tgz`
-3. Unzip the file to local folder - `tar -zxvf spark-3.2.2.tgz`
-4. Set `SPARK_HOME` environment variable to `<downloaded folder>\spark-3.2.2`
-5. Add to the `PATH` environment, the `%SPARK_HOME%\bin`
 
 ---
 
@@ -346,16 +409,26 @@ final var sc = new JavaSparkContext(conf);
 
 There are two ways to create RDDs:
 
-- **parallelizing** an existing collection in the driver program
+- **parallelizing** an existing collection in the driver program (only used for POC or prototyping)
 - referencing a dataset in an **external storage system**, such as a shared filesystem, HDFS, HBase, or any data source
   offering a Hadoop `InputFormat`
+
+4. Spark UI can be viewed in browser using default port of 4040:
+
+```
+http://localhost:4040/
+```
+
+---
+
+### Chapter 04. Create RDD using parallelize()
 
 Parallelized collections are created by calling JavaSparkContext’s `parallelize() `method on an existing
 `Collection` in the driver program. The elements of the collection are copied to form a **RDD** that can be operated on
 in parallel.
 
 ```
-final var data = List.of(165, 254, 124656, 356838, 64836);
+final var data = List.of(1, 2, 3, 4, 5, 6, 7, 8);
 final var myRdd = sc.parallelize(data);
 ```
 
@@ -385,15 +458,9 @@ However, we can also set it manually by passing it as a second parameter to para
 sc.parallelize(data, 10)
 ```
 
-Spark UI can be viewed in browser using default port of 4040:
-
-```
-http://localhost:4040/
-```
-
 ---
 
-### Chapter 04. Spark RDD - Reduces
+### Chapter 06. Spark RDD - Reduces
 
 As discussed, once `JavaRDD` object is created, it can be used to perform `reduce` operation.
 

@@ -12,7 +12,7 @@ public class SparkFirstProgram {
         final var conf = new SparkConf().setAppName("SparkFirstProgram").setMaster("local[*]");
 
         try (final var sc = new JavaSparkContext(conf)) {
-            final var data = List.of(165, 254, 124656, 356838, 64836);
+            final var data = List.of(1, 2, 3, 4, 5, 6, 7, 8);
 
             final var myRdd = sc.parallelize(data);
             System.out.printf("Default number of partitions: %d%n", myRdd.getNumPartitions());
