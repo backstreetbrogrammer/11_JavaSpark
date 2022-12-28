@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter04_rddreduces;
+package com.backstreetbrogrammer.chapter06_rddreduces;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;

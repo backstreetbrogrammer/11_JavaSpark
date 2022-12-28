@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter07_rddexternaldatasets;
+package com.backstreetbrogrammer.chapter05_rddexternaldatasets;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -66,6 +66,29 @@ public class RDDExternalDatasetsTest {
                     System.out.println(tuple._2);
                 }
             });
+        }
+    }
+
+    @Test
+    @DisplayName("Test loading csv file into Spark RDD")
+    void testLoadingCSVFileIntoSparkRDD() {
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final String testCSVFilePath = Path.of("src", "test", "resources", "dma.csv").toString();
+            final var myRdd = sparkContext.textFile(testCSVFilePath);
+
+            System.out.printf("Total lines in file %d%n", myRdd.count());
+
+            System.out.println("CSV Headers~>");
+            System.out.println(myRdd.first());
+            System.out.println("--------------------");
+
+            System.out.println("Printing first 10 lines~>");
+            myRdd.take(10).forEach(System.out::println);
+            System.out.println("--------------------");
+
+            final var csvFields = myRdd.map(line -> line.split(","));
+            csvFields.take(5)
+                     .forEach(fields -> System.out.println(String.join("|", fields)));
         }
     }
 
