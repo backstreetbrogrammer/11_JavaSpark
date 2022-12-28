@@ -424,8 +424,8 @@ http://localhost:4040/
 ### Chapter 04. Create RDD using parallelize()
 
 Parallelized collections are created by calling JavaSparkContext’s `parallelize() `method on an existing
-`Collection` in the driver program. The elements of the collection are copied to form a **RDD** that can be operated on
-in parallel.
+`Collection` in the **driver** program. The elements of the collection are copied to form a **RDD** that can be operated
+on in parallel.
 
 ```
 final var data = List.of(1, 2, 3, 4, 5, 6, 7, 8);
