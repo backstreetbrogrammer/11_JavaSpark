@@ -80,6 +80,14 @@ volumes of data can be used to address business problems we would not have been 
 | zettabyte (ZB) | 10^21       | 2^70       |
 | yottabyte (YB) | 10^24       | 2^80       |
 
+Some interesting statistics:
+
+- More than **1 exabytes** worth of data are generated each day
+- There are currently over **64.2 zettabytes** of data in the entire digital universe in 2020 and expected to reach
+  **175 zettabytes** in 2025
+- The average person generates **1.7 MB** of data per second
+- 90% of the world’s data has been created in the last two years
+
 The **5V's** of Big Data:
 
 ###### Volume
@@ -331,26 +339,46 @@ scala> :quit
 We can create a Maven project and add spark dependencies.
 
 ```
-<dependency>
-    <groupId>org.apache.spark</groupId>
-    <artifactId>spark-core_2.13</artifactId>
-    <version>${apache-spark.version}</version>
-</dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.13</artifactId>
+            <version>${apache-spark.version}</version>
+        </dependency>
 
-<dependency>
-    <groupId>org.apache.spark</groupId>
-    <artifactId>spark-sql_2.13</artifactId>
-    <version>${apache-spark.version}</version>
-</dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.13</artifactId>
+            <version>${apache-spark.version}</version>
+        </dependency>
 
-<dependency>
-    <groupId>org.apache.hadoop</groupId>
-    <artifactId>hadoop-hdfs</artifactId>
-    <version>3.3.4</version>
-</dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-hdfs</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-aws</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
 ```
 
 Latest apache spark version as of this writing is **3.3.1**
+
+Latest hadoop version as of this writing is **3.3.4**
 
 Complete `pom.xml` can be found at Github:
 [pom.xml](https://github.com/backstreetbrogrammer/11_JavaSpark/pom.xml)
@@ -529,6 +557,17 @@ Apart from **text files**, Spark’s Java API also supports several other data f
 - `JavaRDD.saveAsObjectFile()` and `JavaSparkContext.objectFile()` support saving an RDD in a simple format consisting
   of **serialized** Java objects. While this is not as efficient as specialized formats like **Avro**, it offers an easy
   way to save any RDD.
+
+#### Load files from Amazon S3
+
+Amazon S3 is a highly durable, scalable, secure, fast and inexpensive storage service. With the EMR File System (EMRFS),
+Amazon EMR can efficiently and securely use Amazon S3 as an object store for Hadoop. Amazon EMR has made numerous
+improvements to Hadoop, allowing us to seamlessly process large amounts of data stored in Amazon S3.
+
+We need to use Third Generation `s3a:\\` which supports larger files and improves in performance. However, Second
+Generation `s3n:\\` may also be used but not recommended.
+
+
 
 ---
 

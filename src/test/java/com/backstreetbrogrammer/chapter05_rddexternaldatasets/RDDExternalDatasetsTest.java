@@ -9,8 +9,11 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RDDExternalDatasetsTest {
 
@@ -89,6 +92,30 @@ public class RDDExternalDatasetsTest {
             final var csvFields = myRdd.map(line -> line.split(","));
             csvFields.take(5)
                      .forEach(fields -> System.out.println(String.join("|", fields)));
+        }
+    }
+
+    @Test
+    @DisplayName("Test loading file from Amazon S3 into Spark RDD")
+    void testLoadingAmazonS3FileIntoSparkRDD() {
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            // Replace Key with AWS account key (can find this on IAM)
+            sparkContext.hadoopConfiguration().set("fs.s3a.access.key", "AWS access-key value");
+
+            // Replace Key with AWS secret key (can find this on IAM)
+            sparkContext.hadoopConfiguration().set("fs.s3a.secret.key", "AWS secret-key value");
+
+            // Set the AWS S3 end point
+            sparkContext.hadoopConfiguration().set("fs.s3a.endpoint", "s3.amazonaws.com");
+
+            // Read a single text file
+            final var myRdd = sparkContext.textFile("s3a://backstreetbrogrammer/spark/1000words.txt");
+
+          /*System.out.printf("Total lines in file %d%n", myRdd.count());
+            System.out.println("Printing first 10 lines~>");
+            myRdd.take(10).forEach(System.out::println);*/
+
+            assertThrows(AccessDeniedException.class, myRdd::count);
         }
     }
 
