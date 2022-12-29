@@ -27,23 +27,21 @@ Unify the processing of data in batches and real-time streaming.
 3. Spark RDD - First Program
 4. Create RDD using parallelize()
 5. Create RDD using External Datasets
-6. Spark RDD - Reduces
-7. Spark RDD - Mapping
+6. Spark RDD Actions - reduce(), fold(), aggregate()
+7. Spark RDD Transformations - map(), flatMap(), filter()
 8. Spark RDD - Printing elements
-10. Spark RDD - Tuples
-11. Spark RDD - PairRDDs
-12. Spark RDD - FlatMaps
-13. Spark RDD - Filters
-14. Exercise 1 - Unique Word Count
-15. Spark RDD - Closures and Shared Variables
-16. Spark RDD - Joins
-17. Spark RDD - Persistence
-18. Spark RDD - Shuffles
-19. Exercises and Solutions
-20. Spark RDD - Submitting applications
-21. Databricks and AWS EMR
-22. Introduction to Kryo Serialization
-23. Tuning Spark
+9. Spark RDD - Tuples
+10. Spark RDD - PairRDDs
+11. Exercise 1 - Unique Word Count
+12. Spark RDD - Closures and Shared Variables
+13. Spark RDD - Joins
+14. Spark RDD - Persistence
+15. Spark RDD - Shuffles
+16. Exercises and Solutions
+17. Spark RDD - Submitting applications
+18. Databricks and AWS EMR
+19. Introduction to Kryo Serialization
+20. Tuning Spark
 
 ### Part II - Spark SQL
 
@@ -567,11 +565,30 @@ improvements to Hadoop, allowing us to seamlessly process large amounts of data 
 We need to use Third Generation `s3a:\\` which supports larger files and improves in performance. However, Second
 Generation `s3n:\\` may also be used but not recommended.
 
+Example:
 
+```
+            // Replace Key with AWS account key (can find this on IAM)
+            sparkContext.hadoopConfiguration().set("fs.s3a.access.key", "AWS access-key value");
+
+            // Replace Key with AWS secret key (can find this on IAM)
+            sparkContext.hadoopConfiguration().set("fs.s3a.secret.key", "AWS secret-key value");
+
+            // Set the AWS S3 end point
+            sparkContext.hadoopConfiguration().set("fs.s3a.endpoint", "s3.amazonaws.com");
+
+            // Read a single text file
+            final var myRdd = sparkContext.textFile("s3a://backstreetbrogrammer/spark/1000words.txt");
+```
 
 ---
 
-### Chapter 06. Spark RDD - Reduces
+### Chapter 06. Spark RDD Actions - reduce(), fold(), aggregate()
+
+#### Action: `reduce(func)`
+
+> Aggregate the elements of the dataset using a function func (which takes two arguments and returns one).
+> The function should be commutative and associative so that it can be computed correctly in parallel.
 
 As discussed, once `JavaRDD` object is created, it can be used to perform `reduce` operation.
 
@@ -587,11 +604,76 @@ final var min = myRdd.reduce(Integer::min);
 final var sum = myRdd.reduce(Integer::sum);
 ```
 
+#### Action: `fold(zeroValue, func)`
+
+> Since RDD’s are partitioned, the fold() function takes full advantage of it by first aggregating elements in
+> each partition and then aggregating results of all partitions to get the final result.
+> The result of this function is the same as this RDD type.
+
+`fold()` takes the following arguments –
+
+`zeroValue` – Initial value to be used for each partition in folding, this value would be used to initialize the
+accumulator for each partition. We mostly use 0 for integer and empty for collections.
+
+`func` – a function used to both accumulate results within a partition and combine results from all partitions
+
+Example:
+
+```
+final var sum = myRdd.fold(0D, Double::sum);
+```
+
+#### Action: `aggregate(zeroValue, seqOp, combOp)`
+
+> Since RDD’s are partitioned, the aggregate() function takes full advantage of it by first aggregating elements in
+> each partition and then aggregating results of all partitions to get the final result.
+> The result of this function could be any type and not necessarily same as this RDD type.
+
+`aggregate()` takes the following arguments –
+
+`zeroValue` – Initial value to be used for each partition in folding, this value would be used to initialize the
+accumulator for each partition. We mostly use 0 for integer and empty for collections.
+
+`seqOp` – a function used to accumulate the results of each partition, and stores the running accumulated result to U
+
+`combOp` - a function used to combine the results of all partitions U
+
+#### Difference between reduce(), fold(), aggregate()
+
+- `reduce()` is similar to `fold()` except reduce takes a 0 value as an initial **default** value for each partition.
+- `reduce()` is similar to `aggregate()` with a difference; `reduce()` return type should be the same as this RDD
+  element type whereas `aggregate()` can return any type.
+- `fold()` is similar to `reduce()` except it takes a `zeroValue` as an initial value **assigned by developer** for each
+  partition.
+- `fold()` is similar to `aggregate()` with a difference; `fold()` return type should be the same as this RDD element
+  type whereas `aggregate()` can return any type.
+- `aggregate()` is similar to `fold()` and `reduce()` except it returns RDD of any type whereas other 2 returns same RDD
+  type.
+
 ---
 
-### Chapter 05. Spark RDD - Mapping
+### Chapter 07. Spark RDD Transformations - map(), flatMap(), filter()
 
-Transformation: `map(func)`
+RDD Transformations are Spark operations when executed on RDD, it results in a single or multiple new RDD’s. Since RDD
+are immutable in nature, transformations always create new RDD without updating an existing one.
+
+RDD Transformations are **lazy** operations meaning none of the transformations get executed until we call an **action**
+on Spark RDD. Since RDD’s are immutable, any transformations on it result in a new RDD leaving the current one
+unchanged.
+
+There are two types of RDD transformations:
+
+- Narrow Transformation: Transformations which compute data living on a single partition => there will not be any data
+  movement between partitions to execute narrow transformations. Functions such as `map()`, `mapPartition()`,
+  `flatMap()`, `filter()`, `union()` are some examples of narrow transformation.
+- Wider Transformation: Transformations which compute data living on many partitions => there will be data movements
+  between partitions to execute wider transformations. Since these shuffles the data, they also called shuffle
+  transformations. Functions such as `groupByKey()`, `aggregateByKey()`, `aggregate()`, `join()`, `repartition()` are
+  some examples of a wider transformations.
+
+When compared to Narrow transformations, wider transformations are expensive operations due to **shuffling**.
+
+#### Transformation: `map(func)`
 
 > Return a new distributed dataset formed by passing each element of the source through a function `func`.
 
@@ -608,9 +690,38 @@ final var count = myRdd.map(String::length).count();
 final var count = myRdd.map(String::length).map(v -> 1L).reduce(Long::sum);
 ```
 
+#### Transformation: `flatMap(func)`
+
+> Similar to map, but each input item can be mapped to 0 or more output items
+> (so `func` should return a `Seq` or `Iterable` rather than a single item).
+
+As RDDs are immutable, after applying the `flatMap` transformation, new RDD is created.
+
+However, in functional programming-language jargon, the `flatMap` method lets us replace each value of a stream with
+another stream and then concatenates all the generated streams into a single stream.
+
+Example:
+
+```
+final var words = lines.flatMap(line -> List.of(line.split("\\s")).iterator());
+```
+
+#### Transformation: `filter(func)`
+
+> Return a new dataset formed by selecting those elements of the source on which `func` returns true.
+
+As RDDs are immutable, after applying the `filter` transformation, new RDD is created.
+
+Example:
+
+```
+final var words = lines.flatMap(line -> List.of(line.split("\\s")).iterator());
+final var filteredWords = words.filter(word -> ((word != null) && (word.trim().length() > 0)));
+```
+
 ---
 
-### Chapter 06. Spark RDD - Printing elements
+### Chapter 08. Spark RDD - Printing elements
 
 We can print out the elements of an RDD using:
 
@@ -642,7 +753,7 @@ rdd.take(100).foreach(println)
 
 ---
 
-### Chapter 08. Spark RDD - Tuples
+### Chapter 09. Spark RDD - Tuples
 
 In Scala, a **tuple** is a value that contains a fixed number of elements, each with its own type. Tuples are immutable.
 Tuples are especially handy for returning multiple values from a method.
@@ -667,7 +778,7 @@ final var tuple2JavaRDD = myRdd.map(line -> new Tuple2<>(line, line.length()));
 
 ---
 
-### Chapter 09. Spark RDD - PairRDDs
+### Chapter 10. Spark RDD - PairRDDs
 
 While most Spark operations work on RDDs containing any type of objects, a few special operations are only available on
 RDDs of **key-value pairs**. The most common ones are distributed “shuffle” operations, such as grouping or aggregating
@@ -697,31 +808,7 @@ accompanied by a matching `hashCode()` method.
 
 ---
 
-### Chapter 10. Spark RDD - FlatMaps
-
-Transformation: `flatMap(func)`
-
-> Similar to map, but each input item can be mapped to 0 or more output items
-> (so `func` should return a `Seq` or `Iterable` rather than a single item).
-
-As RDDs are immutable, after applying the `flatMap` transformation, new RDD is created.
-
-However, in functional programming-language jargon, the `flatMap` method lets us replace each value of a stream with
-another stream and then concatenates all the generated streams into a single stream.
-
----
-
-### Chapter 11. Spark RDD - Filters
-
-Transformation: `filter(func)`
-
-> Return a new dataset formed by selecting those elements of the source on which `func` returns true.
-
-As RDDs are immutable, after applying the `filter` transformation, new RDD is created.
-
----
-
-### Chapter 12. Exercise 1 - Unique Word Count
+### Chapter 11. Exercise 1 - Unique Word Count
 
 #### Task: Count unique English words from the given file - numbers, punctuations, space, tabs, etc. should NOT be counted.
 
@@ -748,7 +835,7 @@ Meaning that word "someone" appeared total 5 times in the given file.
 
 ---
 
-### Chapter 13. Spark RDD - Closures and Shared Variables
+### Chapter 12. Spark RDD - Closures and Shared Variables
 
 A `closure` is an instance of a **function** that can reference non-local variables of that **function** with no
 restrictions.
@@ -849,7 +936,7 @@ the [API documentation](https://spark.apache.org/docs/latest/api/scala/org/apach
 
 ---
 
-### Chapter 14. Spark RDD - Joins
+### Chapter 13. Spark RDD - Joins
 
 Transformation: `join(otherDataset, [numPartitions])`
 
@@ -885,7 +972,7 @@ Transformation: `cartesian(otherDataset)`
 
 ---
 
-### Chapter 15. Spark RDD - Persistence
+### Chapter 14. Spark RDD - Persistence
 
 In Spark, we can **persist** or **cache** a dataset in **memory** across operations.
 
@@ -940,7 +1027,7 @@ LRU)** fashion. If we would like to manually remove an RDD instead of waiting fo
 
 ---
 
-### Chapter 19. Databricks and AWS EMR
+### Chapter 15. Databricks and AWS EMR
 
 In production, there are always 2 choices to work with Big Data, Clusters and Apache Spark:
 

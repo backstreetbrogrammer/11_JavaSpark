@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter14_rddjoins;
+package com.backstreetbrogrammer.chapter13_rddjoins;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;

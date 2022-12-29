@@ -16,6 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RDDReduceTest {
 
+    private final SparkConf sparkConf = new SparkConf().setAppName("RDDReduceTest")
+                                                       .setMaster("local[*]");
+
     private static final List<Double> data = new ArrayList<>();
     private final int noOfIterations = 10;
 
@@ -29,19 +32,50 @@ public class RDDReduceTest {
     }
 
     @Test
-    @DisplayName("Test reduce operation using Spark RDD")
-    void testReduceOperationUsingSparkRDD() {
-        final var conf = new SparkConf().setAppName("RDDReduceTest").setMaster("local[*]");
-        try (final var sc = new JavaSparkContext(conf)) {
-            final var myRdd = sc.parallelize(data, 14);
+    @DisplayName("Test reduce() action using Spark RDD")
+    void testReduceActionUsingSparkRDD() {
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var myRdd = sparkContext.parallelize(data, 14);
 
             final Instant start = Instant.now();
             for (int i = 0; i < noOfIterations; i++) {
                 final var sum = myRdd.reduce(Double::sum);
-                System.out.println("[Spark RDD] SUM:" + sum);
+                System.out.println("[Spark RDD Reduce] SUM:" + sum);
             }
             final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
-            System.out.printf("[Spark RDD] time taken: %d ms%n%n", timeElapsed);
+            System.out.printf("[Spark RDD Reduce] time taken: %d ms%n%n", timeElapsed);
+        }
+    }
+
+    @Test
+    @DisplayName("Test fold() action using Spark RDD")
+    void testFoldActionUsingSparkRDD() {
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var myRdd = sparkContext.parallelize(data, 14);
+
+            final Instant start = Instant.now();
+            for (int i = 0; i < noOfIterations; i++) {
+                final var sum = myRdd.fold(0D, Double::sum);
+                System.out.println("[Spark RDD Fold] SUM:" + sum);
+            }
+            final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
+            System.out.printf("[Spark RDD Fold] time taken: %d ms%n%n", timeElapsed);
+        }
+    }
+
+    @Test
+    @DisplayName("Test aggregate() action using Spark RDD")
+    void testAggregateActionUsingSparkRDD() {
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var myRdd = sparkContext.parallelize(data, 14);
+
+            final Instant start = Instant.now();
+            for (int i = 0; i < noOfIterations; i++) {
+                final var sum = myRdd.aggregate(0D, Double::sum, Double::sum);
+                System.out.println("[Spark RDD Aggregate] SUM:" + sum);
+            }
+            final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
+            System.out.printf("[Spark RDD Aggregate] time taken: %d ms%n%n", timeElapsed);
         }
     }
 

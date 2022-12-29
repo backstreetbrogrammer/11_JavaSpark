@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter10_rddflatmaps;
+package com.backstreetbrogrammer.chapter07_rddmapping;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -18,7 +18,6 @@ public class RDDFlatMapsTest {
     void testFlatMapInSparkRDD() {
         final var conf = new SparkConf().setAppName("RDDFlatMapsTest").setMaster("local[*]");
         try (final var sc = new JavaSparkContext(conf)) {
-
             final String testFilePath = Path.of("src", "test", "resources", "magna-carta.txt.gz").toString();
             final var lines = sc.textFile(testFilePath);
             System.out.printf("Total lines in file %d%n", lines.count());

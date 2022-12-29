@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter08_rddtuples;
+package com.backstreetbrogrammer.chapter09_rddtuples;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;

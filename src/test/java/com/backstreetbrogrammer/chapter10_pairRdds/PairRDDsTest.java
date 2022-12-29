@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter09_pairRdds;
+package com.backstreetbrogrammer.chapter10_pairRdds;
 
 import com.google.common.collect.Iterables;
 import org.apache.spark.SparkConf;

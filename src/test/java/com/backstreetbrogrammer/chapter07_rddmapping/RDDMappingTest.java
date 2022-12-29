@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter05_rddmapping;
+package com.backstreetbrogrammer.chapter07_rddmapping;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.spark.SparkConf;

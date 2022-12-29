@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter06_rddprinting;
+package com.backstreetbrogrammer.chapter08_rddprinting;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;

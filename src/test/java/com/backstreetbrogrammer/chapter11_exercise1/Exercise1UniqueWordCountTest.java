@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter12_exercise1;
+package com.backstreetbrogrammer.chapter11_exercise1;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;

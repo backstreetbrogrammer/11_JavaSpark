@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter11_rddfilters;
+package com.backstreetbrogrammer.chapter07_rddmapping;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -15,7 +15,6 @@ public class RDDFiltersTest {
     void testFilterInSparkRDD() {
         final var conf = new SparkConf().setAppName("RDDFiltersTest").setMaster("local[*]");
         try (final var sc = new JavaSparkContext(conf)) {
-
             final String testFilePath = Path.of("src", "test", "resources", "magna-carta.txt.gz").toString();
             final var lines = sc.textFile(testFilePath);
             System.out.printf("Total lines in file %d%n", lines.count());

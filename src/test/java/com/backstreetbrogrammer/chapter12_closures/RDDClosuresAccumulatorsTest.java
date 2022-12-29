@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter13_closures;
+package com.backstreetbrogrammer.chapter12_closures;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
