@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter12_closures;
+package com.backstreetbrogrammer.chapter16_closures;
 
 import com.google.common.base.Strings;
 import org.apache.spark.util.AccumulatorV2;

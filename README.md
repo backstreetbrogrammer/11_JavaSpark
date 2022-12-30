@@ -34,10 +34,10 @@ Unify the processing of data in batches and real-time streaming.
 10. Spark RDD - PairRDDs
 11. Exercise 1 - Unique Word Count
 12. Spark RDD - repartition(), coalesce()
-13. Spark RDD - Closures and Shared Variables
-14. Spark RDD - Joins
+13. Spark RDD - Joins
+14. Spark RDD - Shuffles
 15. Spark RDD - Persistence
-16. Spark RDD - Shuffles
+16. Spark RDD - Closures and Shared Variables
 17. Exercises and Solutions
 18. Spark RDD - Submitting applications
 19. Databricks and AWS EMR
@@ -838,12 +838,24 @@ Meaning that word "someone" appeared total 5 times in the given file.
 
 ### Chapter 12: Spark RDD - repartition(), coalesce()
 
+After performing many transformations and actions or reductions on our multi-partitioned RDD => we may have reached a
+point where we only have a small amount of data left.
+
+For the remaining transformations (wider) and actions, there is no advantage to keep many partitions across the cluster
+of nodes making any more shuffles needlessly expensive.
+
+In such a scenario, we may reduce the number of partitions using `repartition()` or `coalesce()`.
+
 #### Transformation: `repartition(numPartitions)`
 
 > Reshuffle the data in the RDD randomly to create either more or fewer partitions and balance it across them.
 > This always shuffles all data over the network.
 
 Example:
+
+```
+final var newRdd = myRdd.repartition(2);
+```
 
 #### Transformation: `coalesce(numPartitions)`
 
@@ -852,13 +864,117 @@ Example:
 
 Example:
 
-One important point to note is that Spark `repartition()` and `coalesce()` methods are very expensive operations as they
+```
+final var newRdd = myRdd.coalesce(2);
+```
+
+One important point to note is that `repartition()` and `coalesce()` methods are very expensive operations as they
 shuffle the data across many partitions; hence we should try to minimize repartition as much as possible.
+
+---
+
+### Chapter 13. Spark RDD - Joins
+
+Transformation: `join(otherDataset, [numPartitions])`
+
+When called on datasets of type `(K, V)` and `(K, W)`, returns a dataset of `(K, (V, W))` pairs with all pairs of
+elements for each key.
+
+**Outer joins** are supported through `leftOuterJoin()`, `rightOuterJoin()`, and `fullOuterJoin()`.
+
+#### Inner join
+
+> Joins two RDDs based on a common field K, and selects records that have matching values in these fields
+
+#### Left Outer join
+
+> Joins two RDDs based on a common field K, and selects records that have matching values in these fields and remaining
+> rows from the **left** RDD.
+
+#### Right Outer join
+
+> Joins two RDDs based on a common field K, and selects records that have matching values in these fields and remaining
+> rows from the **right** RDD.
+
+#### Full Outer join
+
+> Joins two RDDs based on a common field K, and selects records that have matching values in these fields and remaining
+> rows from **both** of the RDDs.
+
+#### Cartesian
+
+Transformation: `cartesian(otherDataset)`
+
+> When called on datasets of types T and U, returns a dataset of (T, U) pairs (all pairs of elements).
+
+---
+
+### Chapter 14. Spark RDD - Shuffles
+
+Certain operations within Spark trigger an event known as the shuffle. The shuffle is Spark’s mechanism for
+re-distributing data so that it’s grouped differently across partitions. This typically involves copying data across
+executors and machines, making the shuffle a complex and costly operation.
+
 
 
 ---
 
-### Chapter 12. Spark RDD - Closures and Shared Variables
+### Chapter 15. Spark RDD - Persistence
+
+In Spark, we can **persist** or **cache** a dataset in **memory** across operations.
+
+When we persist an RDD, each node stores any _partitions_ of it that it computes in memory and reuses them in other
+actions on that dataset (or datasets derived from it). This allows future actions to be much faster (often by more than
+10x). Caching is a key tool for iterative algorithms and fast interactive use.
+
+We can mark an RDD to be persisted using `persist()` or `cache()` methods on it.
+
+The first time it is computed in an **action**, it will be kept in memory on the nodes.
+
+Spark’s cache is **fault-tolerant** – if any partition of an RDD is lost, it will automatically be recomputed using the
+transformations that originally created it.
+
+In addition, each persisted RDD can be stored using a different _storage level_, allowing us, for example, to persist
+the dataset on **disk**, persist it in **memory** but as serialized Java objects (to save space), replicate it across
+nodes. These levels are set by passing a `StorageLevel` object to `persist()`.
+
+The `cache()` method is a shorthand for using the **default** storage level, which is `StorageLevel.MEMORY_ONLY` (store
+deserialized objects in memory).
+
+Spark also **automatically** persists some intermediate data in shuffle operations (e.g. `reduceByKey()`), even without
+users calling `persist()`. This is done to avoid recomputing the entire input if a node fails during the **shuffle**.
+
+It is recommended to call `persist()` on the resulting RDD if we plan to **reuse** it.
+
+#### Storage Level to chose
+
+Spark’s storage levels are meant to provide different trade-offs between memory usage and CPU efficiency.
+
+Here is the recommended approach:
+
+- If our RDDs fit comfortably with the default storage level (`MEMORY_ONLY`), leave them that way. This is the most
+  CPU-efficient option, allowing operations on the RDDs to run as fast as possible.
+
+- If not, try using `MEMORY_ONLY_SER` and selecting a fast serialization library to make the objects much more
+  space-efficient, but still reasonably fast to access.
+
+- Don’t spill to disk unless the functions that computed our datasets are expensive, or they filter a large amount of
+  the data. Otherwise, recomputing a partition may be as fast as reading it from disk.
+
+- Use the replicated storage levels if we want fast fault recovery (e.g. if using Spark to serve requests from a web
+  application). All the storage levels provide full fault tolerance by recomputing lost data, but the replicated ones
+  let us continue running tasks on the RDD without waiting to recompute a lost partition.
+
+#### Removing Data
+
+Spark automatically monitors cache usage on each node and drops out old data partitions in a **least-recently-used (
+LRU)** fashion. If we would like to manually remove an RDD instead of waiting for it to fall out of the cache, use the
+`RDD.unpersist()` method. Note that this method does not block by default. To block until resources are freed, specify
+`blocking=true` when calling this method.
+
+---
+
+### Chapter 16. Spark RDD - Closures and Shared Variables
 
 A `closure` is an instance of a **function** that can reference non-local variables of that **function** with no
 restrictions.
@@ -959,98 +1075,7 @@ the [API documentation](https://spark.apache.org/docs/latest/api/scala/org/apach
 
 ---
 
-### Chapter 13. Spark RDD - Joins
-
-Transformation: `join(otherDataset, [numPartitions])`
-
-When called on datasets of type `(K, V)` and `(K, W)`, returns a dataset of `(K, (V, W))` pairs with all pairs of
-elements for each key.
-
-**Outer joins** are supported through `leftOuterJoin()`, `rightOuterJoin()`, and `fullOuterJoin()`.
-
-#### Inner join
-
-> Joins two RDDs based on a common field K, and selects records that have matching values in these fields
-
-#### Left Outer join
-
-> Joins two RDDs based on a common field K, and selects records that have matching values in these fields and remaining
-> rows from the **left** RDD.
-
-#### Right Outer join
-
-> Joins two RDDs based on a common field K, and selects records that have matching values in these fields and remaining
-> rows from the **right** RDD.
-
-#### Full Outer join
-
-> Joins two RDDs based on a common field K, and selects records that have matching values in these fields and remaining
-> rows from **both** of the RDDs.
-
-#### Cartesian
-
-Transformation: `cartesian(otherDataset)`
-
-> When called on datasets of types T and U, returns a dataset of (T, U) pairs (all pairs of elements).
-
----
-
-### Chapter 14. Spark RDD - Persistence
-
-In Spark, we can **persist** or **cache** a dataset in **memory** across operations.
-
-When we persist an RDD, each node stores any _partitions_ of it that it computes in memory and reuses them in other
-actions on that dataset (or datasets derived from it). This allows future actions to be much faster (often by more than
-10x). Caching is a key tool for iterative algorithms and fast interactive use.
-
-We can mark an RDD to be persisted using `persist()` or `cache()` methods on it.
-
-The first time it is computed in an **action**, it will be kept in memory on the nodes.
-
-Spark’s cache is **fault-tolerant** – if any partition of an RDD is lost, it will automatically be recomputed using the
-transformations that originally created it.
-
-In addition, each persisted RDD can be stored using a different _storage level_, allowing us, for example, to persist
-the dataset on **disk**, persist it in **memory** but as serialized Java objects (to save space), replicate it across
-nodes. These levels are set by passing a `StorageLevel` object to `persist()`.
-
-The `cache()` method is a shorthand for using the **default** storage level, which is `StorageLevel.MEMORY_ONLY` (store
-deserialized objects in memory).
-
-Spark also **automatically** persists some intermediate data in shuffle operations (e.g. `reduceByKey()`), even without
-users calling `persist()`. This is done to avoid recomputing the entire input if a node fails during the **shuffle**.
-
-It is recommended to call `persist()` on the resulting RDD if we plan to **reuse** it.
-
-#### Storage Level to chose
-
-Spark’s storage levels are meant to provide different trade-offs between memory usage and CPU efficiency.
-
-Here is the recommended approach:
-
-- If our RDDs fit comfortably with the default storage level (`MEMORY_ONLY`), leave them that way. This is the most
-  CPU-efficient option, allowing operations on the RDDs to run as fast as possible.
-
-- If not, try using `MEMORY_ONLY_SER` and selecting a fast serialization library to make the objects much more
-  space-efficient, but still reasonably fast to access.
-
-- Don’t spill to disk unless the functions that computed our datasets are expensive, or they filter a large amount of
-  the data. Otherwise, recomputing a partition may be as fast as reading it from disk.
-
-- Use the replicated storage levels if we want fast fault recovery (e.g. if using Spark to serve requests from a web
-  application). All the storage levels provide full fault tolerance by recomputing lost data, but the replicated ones
-  let us continue running tasks on the RDD without waiting to recompute a lost partition.
-
-#### Removing Data
-
-Spark automatically monitors cache usage on each node and drops out old data partitions in a **least-recently-used (
-LRU)** fashion. If we would like to manually remove an RDD instead of waiting for it to fall out of the cache, use the
-`RDD.unpersist()` method. Note that this method does not block by default. To block until resources are freed, specify
-`blocking=true` when calling this method.
-
----
-
-### Chapter 15. Databricks and AWS EMR
+### Chapter 19. Databricks and AWS EMR
 
 In production, there are always 2 choices to work with Big Data, Clusters and Apache Spark:
 

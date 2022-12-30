@@ -1,4 +1,4 @@
-package com.backstreetbrogrammer.chapter12_closures;
+package com.backstreetbrogrammer.chapter16_closures;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.collections.CollectionUtils;
