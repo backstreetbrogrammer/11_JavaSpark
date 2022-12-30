@@ -75,6 +75,26 @@ public class PairRDDsTest {
         }
     }
 
+    @ParameterizedTest
+    @MethodSource("getFilePaths")
+    @DisplayName("Test distinct() method in Spark RDD")
+    void testDistinctInSparkRDD(final String testFilePath) {
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var lines = sparkContext.textFile(testFilePath);
+            System.out.printf("Total lines in file %d%n", lines.count());
+
+            final var pairRDD = lines.mapToPair(line -> new Tuple2<>(line, line.length()));
+            assertEquals(lines.count(), pairRDD.count());
+
+            final var uniqueWordsPairs = pairRDD.distinct();
+            System.out.println("First few unique words: ");
+            uniqueWordsPairs.take(5).forEach(tuple ->
+                                                     System.out.println(tuple._1));
+
+            System.out.println("--------------------");
+        }
+    }
+
     private static Stream<Arguments> getFilePaths() {
         return Stream.of(
                 Arguments.of(Path.of("src", "test", "resources", "1000words.txt").toString()),

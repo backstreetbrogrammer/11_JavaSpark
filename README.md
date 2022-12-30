@@ -33,15 +33,16 @@ Unify the processing of data in batches and real-time streaming.
 9. Spark RDD - Tuples
 10. Spark RDD - PairRDDs
 11. Exercise 1 - Unique Word Count
-12. Spark RDD - Closures and Shared Variables
-13. Spark RDD - Joins
-14. Spark RDD - Persistence
-15. Spark RDD - Shuffles
-16. Exercises and Solutions
-17. Spark RDD - Submitting applications
-18. Databricks and AWS EMR
-19. Introduction to Kryo Serialization
-20. Tuning Spark
+12. Spark RDD - repartition(), coalesce()
+13. Spark RDD - Closures and Shared Variables
+14. Spark RDD - Joins
+15. Spark RDD - Persistence
+16. Spark RDD - Shuffles
+17. Exercises and Solutions
+18. Spark RDD - Submitting applications
+19. Databricks and AWS EMR
+20. Introduction to Kryo Serialization
+21. Tuning Spark
 
 ### Part II - Spark SQL
 
@@ -832,6 +833,28 @@ Example output _(word, count)_ :
 Meaning that word "someone" appeared total 5 times in the given file.
 
 #### Bonus Task: Find the top 10 words with maximum counts
+
+---
+
+### Chapter 12: Spark RDD - repartition(), coalesce()
+
+#### Transformation: `repartition(numPartitions)`
+
+> Reshuffle the data in the RDD randomly to create either more or fewer partitions and balance it across them.
+> This always shuffles all data over the network.
+
+Example:
+
+#### Transformation: `coalesce(numPartitions)`
+
+> Decrease the number of partitions in the RDD to numPartitions.
+> Useful for running operations more efficiently after filtering down a large dataset.
+
+Example:
+
+One important point to note is that Spark `repartition()` and `coalesce()` methods are very expensive operations as they
+shuffle the data across many partitions; hence we should try to minimize repartition as much as possible.
+
 
 ---
 
