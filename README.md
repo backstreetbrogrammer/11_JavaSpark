@@ -1107,10 +1107,72 @@ developers to easily and cost-effectively process vast amounts of data.
 
 ![How AWS EMR works](EMR1.png)
 
-The most common way is to upload the data to **Amazon S3** and use the built-in features of Amazon EMR to load the data
-onto our cluster.
+#### Packaging and running jar at AWS S3 and EMR
 
-1. Create an account in AWS, for the first time - we can create a 1-year trial
-   [free account](https://aws.amazon.com/free)
+1. Small changes are required in `SparkConf` object that we create. For ex:
 
-_work in progress_
+```
+// we need to remove `setMaster()`
+
+// from
+// private final SparkConf sparkConf = new SparkConf().setAppName("SparkJobForEMR").setMaster("local[*]");
+// to
+private final SparkConf sparkConf = new SparkConf().setAppName("SparkJobForEMR");
+```
+
+2. The most common way is to upload the data to **Amazon S3** and use the built-in features of Amazon EMR to load the
+   data onto our cluster.
+
+```
+            // Replace Key with AWS account key (can find this on IAM)
+            sparkContext.hadoopConfiguration().set("fs.s3a.access.key", "AWS access-key value");
+
+            // Replace Key with AWS secret key (can find this on IAM)
+            sparkContext.hadoopConfiguration().set("fs.s3a.secret.key", "AWS secret-key value");
+
+            // Set the AWS S3 end point
+            sparkContext.hadoopConfiguration().set("fs.s3a.endpoint", "s3.amazonaws.com");
+
+            // Read a single zipped text file from S3 bucket 
+            final var myRdd = sparkContext.textFile(
+                    "s3a://backstreetbrogrammer-bucket/1TrillionWords.txt.gz");
+```
+
+3. Use the `maven-jar-plugin` to define the main class to be used in jar.
+
+Run `mvn package` command to generate the application jar file and upload to Amazon S3
+bucket: `s3a://backstreetbrogrammer-bucket`
+
+4. Now use the `Master public DNS` of AWS EMR cluster to **ssh** to EMR master node from local
+
+```
+ssh -i <pair-key>.pem hadoop@<master_public_dns_aws_emr> 
+```
+
+Need to ensure that inbound firewall rules of our EMR cluster are open for SSH port **22** and additional port
+**18080** from our machine, otherwise SSH will fail.
+
+5. Once logged into AWS EMR master node, copy the application jar from S3 bucket to master node.
+
+```
+aws s3 cp s3://backstreetbrogrammer-bucket/spark-app.jar ./
+```
+
+6. Run the job using `spark-submit` command
+
+```
+spark-submit spark-app.jar
+```
+
+There are lots of options available for `spark-submit` command:
+
+```
+spark-submit \
+  --class <main-class> \
+  --master <master-url> \
+  --deploy-mode <deploy-mode> \
+  --conf <key>=<value> \
+  ... # other options
+  <application-jar> \
+  <application-arguments>
+```

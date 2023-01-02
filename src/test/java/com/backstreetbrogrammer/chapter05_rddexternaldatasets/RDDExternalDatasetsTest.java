@@ -108,8 +108,9 @@ public class RDDExternalDatasetsTest {
             // Set the AWS S3 end point
             sparkContext.hadoopConfiguration().set("fs.s3a.endpoint", "s3.amazonaws.com");
 
-            // Read a single text file
-            final var myRdd = sparkContext.textFile("s3a://backstreetbrogrammer/spark/1000words.txt");
+            // Read a single zipped text file from S3 bucket
+            final var myRdd = sparkContext.textFile(
+                    "s3a://backstreetbrogrammer-bucket/1TrillionWords.txt.gz");
 
           /*System.out.printf("Total lines in file %d%n", myRdd.count());
             System.out.println("Printing first 10 lines~>");
