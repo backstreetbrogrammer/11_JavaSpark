@@ -1095,6 +1095,21 @@ In production, there are always 2 choices to work with Big Data, Clusters and Ap
 
 #### AWS EMR
 
+Hadoop is a collection of services like **MapReduce**, **HDFS** (file system),
+Hadoop [YARN](https://spark.apache.org/docs/latest/running-on-yarn.html) (cluster manager) etc.
+
+We can just replace Hadoop **MapReduce** with Apache **Spark** here.
+
+The most common and popular usage of Apache Spark clusters is with **AWS EMR (Elastic Map Reduce)** services.
+
+Amazon Elastic MapReduce (Amazon EMR) is a web service that enables businesses, researchers, data analysts, and
+developers to easily and cost-effectively process vast amounts of data.
+
+![How AWS EMR works](EMR1.png)
+
+The most common way is to upload the data to **Amazon S3** and use the built-in features of Amazon EMR to load the data
+onto our cluster.
+
 1. Create an account in AWS, for the first time - we can create a 1-year trial
    [free account](https://aws.amazon.com/free)
 
