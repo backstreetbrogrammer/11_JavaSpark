@@ -9,14 +9,14 @@ Key Features:
 Execute fast, distributed ANSI SQL queries for dash-boarding and ad-hoc reporting. Runs faster than most data
 warehouses.
 
+- Batch/streaming data using **Spark Streaming**
+
+Unify the processing of data in batches and real-time streaming.
+
 - Machine learning using **SparkML**
 
 Train machine learning algorithms on a laptop and use the same code to scale to fault-tolerant clusters of thousands of
 machines.
-
-- Batch/streaming data using **Spark Streaming**
-
-Unify the processing of data in batches and real-time streaming.
 
 ## Table of contents
 
@@ -46,9 +46,9 @@ Unify the processing of data in batches and real-time streaming.
 
 ### Part II - Spark SQL
 
-### Part III - Spark ML
+### Part III - Spark Streaming
 
-### Part IV - Spark Streaming
+### Part IV - Spark ML
 
 ### Youtube
 
@@ -911,11 +911,46 @@ Transformation: `cartesian(otherDataset)`
 
 ### Chapter 14. Spark RDD - Shuffles
 
-Certain operations within Spark trigger an event known as the shuffle. The shuffle is Spark’s mechanism for
+Certain operations within Spark trigger an event known as the **shuffle**. The shuffle is Spark’s mechanism for
 re-distributing data so that it’s grouped differently across partitions. This typically involves copying data across
 executors and machines, making the shuffle a complex and costly operation.
 
+Operations which can cause a shuffle include:
 
+- repartition operations like `repartition()` and `coalesce()`
+- **‘ByKey** operations (except for counting) like `groupByKey()` and `reduceByKey()`
+- join operations like `cogroup()` and `join()`
+
+Let's take the example of `reduceByKey()`:
+
+The `reduceByKey()` method generates a new RDD where all values for a single key are combined into a tuple - the key and
+the result of executing a reduce function against all values associated with that key. The challenge is that not all
+values for a single key necessarily reside on the same partition, or even the same machine, but they must be co-located
+to compute the result.
+
+In Spark, data is generally not distributed across partitions to be in the necessary place for a specific operation.
+During computations, a single task will operate on a single partition - thus, to organize all the data for a single
+`reduceByKey()` reduce task to execute, Spark needs to perform an all-to-all operation. It must read from all partitions
+to find all the values for all keys, and then bring together values across partitions to compute the final result for
+each key - this is called the **shuffle**.
+
+Spark Shuffle is an expensive operation since it involves the following:
+
+- Disk I/O
+- Involves data serialization and deserialization
+- Network I/O
+
+When creating an RDD, Spark does not necessarily store the data for all keys in a partition since at the time of
+creation there is no way we can set the key for the data set.
+
+Hence, when we run the `reduceByKey()` operation to aggregate the data on keys, Spark does the following:
+
+- Spark first runs map tasks on all partitions which groups all values for a single key.
+- The results of the map tasks are kept in memory. When results do not fit in memory, Spark stores the data on a disk.
+- Spark shuffles the mapped data across partitions, sometimes it also stores the shuffled data into a disk for reuse
+  when it needs to recalculate.
+- Run the garbage collection.
+- Finally, runs reduce tasks on each partition based on key.
 
 ---
 
