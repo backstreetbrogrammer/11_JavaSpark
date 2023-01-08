@@ -52,7 +52,7 @@ machines.
 
 ### Youtube
 
-![Java and Spark playlist](Java Spark Thumbnail.png)
+![Java and Spark playlist](JavaSparkThumbnail.png)
 
 Playlist:
 [Java and Spark playlist](https://www.youtube.com/playlist?list=PLQDzPczdXrTgqEc0uomGYDS0SFu7qY3g3)
