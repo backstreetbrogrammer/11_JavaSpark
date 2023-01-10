@@ -75,7 +75,7 @@ machines.
 
 ### Chapter 01. The Big Picture
 
-#### Big Data
+#### 1.1 Big Data
 
 Big data is a term that describes large, hard-to-manage volumes of data – both _structured_ and _unstructured_ – that
 inundate businesses on a day-to-day basis.
@@ -138,7 +138,7 @@ quality and accuracy are difficult to control. Big Data is also variable because
 resulting from multiple disparate data types and sources. Example: Data in bulk could create confusion whereas less
 amount of data could convey half or incomplete information.
 
-#### Local versus Distributed Systems
+#### 1.2 Local versus Distributed Systems
 
 Big data can not be processed or stored in a local system or a single node. It requires multiple machines or nodes to
 store / process it.
@@ -156,7 +156,7 @@ distributed system. It also supports **fault tolerance**, if one machine fails, 
 
 ![Distributed System](DistributedSystem.png)
 
-#### Apache Hadoop and MapReduce
+#### 1.3 Apache Hadoop and MapReduce
 
 Apache Hadoop is a collection of open-source software utilities that facilitates using a network of many computers to
 solve problems involving massive amounts of data and computation. It provides a software framework for distributed
@@ -182,7 +182,7 @@ To summarize,
 - **HDFS** is used to distribute large data sets
 - **MapReduce** is used to distribute a computational task to a distributed data set
 
-#### Apache Spark
+#### 1.4 Apache Spark
 
 Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on
 single-node machines or clusters.
@@ -211,7 +211,7 @@ Spark can perform operations up to 100X faster than **MapReduce** because MapRed
 after each map and reduce operation; however Spark keeps most of the data in memory after each transformation. Spark
 will write to disk only when the memory is full.
 
-#### Cluster Mode Overview
+#### 1.5 Cluster Mode Overview
 
 ![Spark Architecture](SparkDiagram.png)
 
@@ -240,7 +240,7 @@ To summarize,
   local area network. If we’d like to send requests to the cluster remotely, it’s better to open an RPC to the driver
   and have it submit operations from nearby than to run a driver far away from the worker nodes.
 
-#### Spark RDDs
+#### 1.6 Spark RDDs
 
 **RDD (Resilient Distributed Dataset)** is the fundamental data structure of Apache Spark which are an immutable
 collection of objects which computes on the different nodes of the cluster. Each and every dataset in Spark RDD is
@@ -273,7 +273,7 @@ workers and execution of the task. Some actions of Spark are count and collect.
 
 ### Chapter 02. Spark Installation and IntelliJ Project Setup
 
-#### Download Apache Spark and Hadoop
+#### 2.1 Download Apache Spark and Hadoop
 
 1. Download Apache Spark version 3.3.1 from [spark official site](https://spark.apache.org/downloads.html)
 2. Download Spark zipped file
@@ -284,12 +284,12 @@ workers and execution of the task. Some actions of Spark are count and collect.
 6. Add to the `PATH` environment, the `%SPARK_HOME%\bin`
 7. Add to the `PATH` environment, the `%HADOOP_HOME%\bin`
 
-#### Download winutils.exe (only for Windows)
+#### 2.2 Download winutils.exe (only for Windows)
 
 Download [winutils.exe](https://github.com/steveloughran/winutils/blob/master/hadoop-3.0.0/bin/winutils.exe) and place
 it in local `%SPARK_HOME%\bin` folder.
 
-#### Verify Spark installation
+#### 2.3 Verify Spark installation
 
 1. Open Windows command prompt `cmd` as **Administrator**
 2. Navigate to folder `%SPARK_HOME%\bin` by typing command: `cd %SPARK_HOME%\bin`
@@ -350,7 +350,7 @@ res6: Long = 5
 scala> :quit
 ```
 
-#### IntelliJ Project Setup - Maven
+#### 2.4 IntelliJ Project Setup - Maven
 
 We can create a Maven project and add spark dependencies.
 
