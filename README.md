@@ -66,6 +66,9 @@ machines.
 
 [Java and Spark playlist](https://www.youtube.com/playlist?list=PLQDzPczdXrTgqEc0uomGYDS0SFu7qY3g3)
 
+- [01 - Apache Spark for Java Developers - Tutorial Series](https://youtu.be/zXflI5htMlo)
+- [02 - Apache Spark for Java Developers - Table of Contents](https://youtu.be/J6tqnBNLW2Q)
+
 ---
 
 ## Part I - Spark RDD
