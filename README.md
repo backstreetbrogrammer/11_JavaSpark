@@ -23,6 +23,12 @@ machines.
 ### Part I - Spark RDD
 
 1. The Big Picture
+    - Big Data
+    - Local versus Distributed Systems
+    - Apache Hadoop and MapReduce
+    - Apache Spark
+    - Cluster Mode Overview
+    - Spark RDDs
 2. Spark Installation and IntelliJ Project Setup
 3. Spark RDD - First Program
 4. Create RDD using parallelize()
@@ -37,7 +43,11 @@ machines.
 13. Spark RDD - Joins
 14. Spark RDD - Shuffles
 15. Spark RDD - Persistence
+    - Cache vs Persist
+    - Persistence Storage Levels
 16. Spark RDD - Closures and Shared Variables
+    - Accumulators
+    - Broadcast Variables
 17. Exercises and Solutions
 18. Spark RDD - Submitting applications
 19. Databricks and AWS EMR
