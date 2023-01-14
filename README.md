@@ -273,7 +273,23 @@ workers and execution of the task. Some actions of Spark are count and collect.
 
 ### Chapter 02. Spark Installation and IntelliJ Project Setup
 
-#### 2.1 Download Apache Spark and Hadoop
+#### 2.1 JDK, Maven and IntelliJ installation
+
+- **JDK 11 download**: https://jdk.java.net/archive/
+
+  Windows zip: https://download.java.net/java/GA/jdk11/13/GPL/openjdk-11.0.1_windows-x64_bin.zip
+
+- **Maven download**: https://maven.apache.org/download.cgi
+
+  Windows zip: https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.zip
+
+- **IntelliJ IDEA download**: https://www.jetbrains.com/idea/download/#section=windows
+
+  Windows: https://www.jetbrains.com/idea/download/download-thanks.html?platform=windows&code=IIC
+
+- Set JAVA_HOME, M2_HOME, MAVEN_HOME system variables and set in PATH
+
+#### 2.2 Download Apache Spark and Hadoop
 
 1. Download Apache Spark version 3.3.1 from [spark official site](https://spark.apache.org/downloads.html)
 2. Download Spark zipped file
@@ -284,12 +300,12 @@ workers and execution of the task. Some actions of Spark are count and collect.
 6. Add to the `PATH` environment, the `%SPARK_HOME%\bin`
 7. Add to the `PATH` environment, the `%HADOOP_HOME%\bin`
 
-#### 2.2 Download winutils.exe (only for Windows)
+#### 2.3 Download winutils.exe (only for Windows)
 
 Download [winutils.exe](https://github.com/steveloughran/winutils/blob/master/hadoop-3.0.0/bin/winutils.exe) and place
 it in local `%SPARK_HOME%\bin` folder.
 
-#### 2.3 Verify Spark installation
+#### 2.4 Verify Spark installation
 
 1. Open Windows command prompt `cmd` as **Administrator**
 2. Navigate to folder `%SPARK_HOME%\bin` by typing command: `cd %SPARK_HOME%\bin`
@@ -350,7 +366,7 @@ res6: Long = 5
 scala> :quit
 ```
 
-#### 2.4 IntelliJ Project Setup - Maven
+#### 2.5 IntelliJ Project Setup - Maven
 
 We can create a Maven project and add spark dependencies.
 
@@ -1157,7 +1173,7 @@ The most common and popular usage of Apache Spark clusters is with **AWS EMR (El
 Amazon Elastic MapReduce (Amazon EMR) is a web service that enables businesses, researchers, data analysts, and
 developers to easily and cost-effectively process vast amounts of data.
 
-![How AWS EMR works](EMR1.png)
+![How AWS EMR works](EMR1.PNG)
 
 #### Packaging and running jar at AWS S3 and EMR
 
