@@ -206,6 +206,8 @@ machines.
 
 Unify the processing of data in batches and real-time streaming.
 
+![Spark EcoSystem](SparkEcosystem.PNG)
+
 Spark is a flexible alternative to MapReduce.
 
 MapReduce requires files to be stored only in HDFS, while Spark can work on data stored in a variety of formats like
