@@ -138,6 +138,10 @@ quality and accuracy are difficult to control. Big Data is also variable because
 resulting from multiple disparate data types and sources. Example: Data in bulk could create confusion whereas less
 amount of data could convey half or incomplete information.
 
+#### Youtube
+
+- [03 - Apache Spark for Java Developers - Big Data](https://youtu.be/6WFS9UXP93w)
+
 #### 1.2 Local versus Distributed Systems
 
 Big data can not be processed or stored in a local system or a single node. It requires multiple machines or nodes to
