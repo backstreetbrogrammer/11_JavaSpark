@@ -26,7 +26,7 @@ machines.
     - Big Data
     - Local versus Distributed Systems
     - Apache Hadoop and MapReduce
-    - Apache Spark
+    - Apache Spark Ecosystem
     - Cluster Mode Overview
     - Spark RDDs
 2. Spark Installation and IntelliJ Project Setup
@@ -186,7 +186,7 @@ To summarize,
 - **HDFS** is used to distribute large data sets
 - **MapReduce** is used to distribute a computational task to a distributed data set
 
-#### 1.4 Apache Spark
+#### 1.4 Apache Spark Ecosystem
 
 Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on
 single-node machines or clusters.
