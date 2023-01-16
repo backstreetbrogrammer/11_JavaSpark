@@ -160,6 +160,10 @@ distributed system. It also supports **fault tolerance**, if one machine fails, 
 
 ![Distributed System](DistributedSystem.png)
 
+#### Youtube
+
+- [04 - Apache Spark for Java Developers - Local vs Distributed Systems](https://youtu.be/WBrAPR5JyBw)
+
 #### 1.3 Apache Hadoop and MapReduce
 
 Apache Hadoop is a collection of open-source software utilities that facilitates using a network of many computers to
@@ -185,6 +189,10 @@ To summarize,
 
 - **HDFS** is used to distribute large data sets
 - **MapReduce** is used to distribute a computational task to a distributed data set
+
+#### Youtube
+
+- [05 - Apache Spark for Java Developers - Hadoop and MapReduce](https://youtu.be/e2AYdWC44i4)
 
 #### 1.4 Apache Spark Ecosystem
 
@@ -216,6 +224,10 @@ HDFS, AWS S3, Cassandra, HBase etc.
 Spark can perform operations up to 100X faster than **MapReduce** because MapReduce writes most of the data to disk
 after each map and reduce operation; however Spark keeps most of the data in memory after each transformation. Spark
 will write to disk only when the memory is full.
+
+#### Youtube
+
+- [06 - Apache Spark for Java Developers - Spark Ecosystem](https://youtu.be/fmQe_wj6f-4)
 
 #### 1.5 Cluster Mode Overview
 
