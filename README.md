@@ -242,7 +242,50 @@ connected, Spark acquires executors on nodes in the cluster, which are processes
 for our application. Next, it sends our application code (defined by JAR or Python files passed to `SparkContext`) to
 the executors. Finally, `SparkContext` sends tasks to the executors to run.
 
-To summarize,
+To dig deeper into the internals of job execution in Spark:
+
+![Spark Architecture](SparkInternals.png)
+
+In our **master** node, we have the **driver** program, which drives our application. The code we are writing behaves as
+a driver program or if we are using the interactive shell (Scala or Python), the shell acts as the driver program.
+
+Inside the driver program, the first thing we do is, we create a **Spark Context**. Assume that the Spark context is a
+gateway to all the Spark functionalities. It is similar to a database connection. Any command we execute in our database
+goes through the database connection. Likewise, anything we do on Spark goes through Spark context.
+
+Now, this Spark context works with the **Cluster Manager** to manage various jobs. The driver program & Spark context
+takes care of the job execution within the cluster. A job is split into multiple tasks which are distributed over the
+worker node. Anytime an RDD is created in Spark context, it can be distributed across various nodes and can be cached
+there.
+
+**Worker** nodes are the slave nodes whose job is to basically execute the tasks. These tasks are then executed on the
+partitioned RDDs in the worker node and hence returns the result to the Spark Context.
+
+Spark Context takes the job, breaks the job in tasks and distribute them to the worker nodes. These tasks work on the
+partitioned RDD, perform operations, collect the results and return to the main Spark Context.
+
+If we increase the number of workers, then we can divide jobs into more partitions and execute them in parallel over
+multiple systems. It will be a lot faster.
+
+With the increase in the number of workers, memory size will also increase & we can cache the jobs to execute it faster.
+
+**STEP 1**: The client submits spark user application code. When an application code is submitted, the driver implicitly
+converts user code that contains transformations and actions into a logically **directed acyclic graph** called DAG. At
+this stage, it also performs optimizations such as pipelining transformations.
+
+**STEP 2**: After that, it converts the logical graph called DAG into physical execution plan with many stages. After
+converting into a physical execution plan, it creates physical execution units called **tasks** under each stage. Then
+the tasks are bundled and sent to the cluster.
+
+**STEP 3**: Now the driver talks to the cluster manager and negotiates the resources. Cluster manager launches executors
+in worker nodes on behalf of the driver. At this point, the driver will send the tasks to the executors based on data
+placement. When executors start, they register themselves with drivers. So, the driver will have a complete view of
+executors that are executing the task.
+
+**STEP 4**: During the course of execution of tasks, driver program will monitor the set of executors that runs. Driver
+node also schedules future tasks based on data placement.
+
+Few more points to note,
 
 - Each application gets its own executor processes, which stay up for the duration of the whole application and run
   tasks in multiple threads. This has the benefit of isolating applications from each other, on both the scheduling
@@ -264,6 +307,12 @@ To summarize,
 collection of objects which computes on the different nodes of the cluster. Each and every dataset in Spark RDD is
 logically partitioned across many servers so that they can be computed on different nodes of the cluster.
 
+RDD stands for:
+
+- **Resilient**: Fault tolerant and is capable of rebuilding data on failure
+- **Distributed**: Distributed data among the multiple nodes in a cluster
+- **Dataset**: Collection of partitioned data with values
+
 RDD has these main features:
 
 - Distributed collection of data
@@ -271,6 +320,8 @@ RDD has these main features:
 - Fault-tolerant “in-memory” computations
 - Parallel operation - partitioned
 - Ability to use many data sources
+
+![RDD Workflow](RDDWorkflow.PNG)
 
 RDDs support 2 kinds of operations:
 
