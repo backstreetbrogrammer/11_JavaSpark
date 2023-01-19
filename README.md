@@ -349,6 +349,10 @@ RDD has these main features:
   group by operations.
 - Ability to use various data sources: text file, csv, json, zipped, MongoDb, Cassandra, AWS S3, MySQL, HBase, etc.
 
+#### Youtube
+
+- [09 - Apache Spark for Java Developers - RDDs Overview](https://youtu.be/1RIWiH4s-9w)
+
 ![RDD Operations](RDDOperations.png)
 
 RDDs support 2 kinds of operations:
@@ -390,6 +394,9 @@ An action is one of the ways of sending data from **Executor** to the driver.
 **Executors** are agents that are responsible for executing a task. While the driver is a JVM process that coordinates
 workers and execution of the task.
 
+#### Youtube
+
+- [10 - Apache Spark for Java Developers - RDD Operations](https://youtu.be/KX15aMsK9-Y)
 
 ---
 
