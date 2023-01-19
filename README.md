@@ -315,21 +315,41 @@ Few more points to note,
 collection of objects which computes on the different nodes of the cluster. Each and every dataset in Spark RDD is
 logically partitioned across many servers so that they can be computed on different nodes of the cluster.
 
+![RDD Partitioning](RDDPartitioning.PNG)
+
 RDD stands for:
 
 - **Resilient**: Fault tolerant and is capable of rebuilding data on failure
 - **Distributed**: Distributed data among the multiple nodes in a cluster
 - **Dataset**: Collection of partitioned data with values
 
+The term **Resilient** defines the ability that generates the data automatically or data rolling back to the original
+state when an unexpected calamity occurs with a probability of data loss.
+
+The data written into RDDs is partitioned and stored into multiple executable nodes. If an executing node fails in the
+run time, then it instantly gets the back up from the next executable node. RDDs can store structured, unstructured and
+semi-structured data.
+
 RDD has these main features:
 
-- Distributed collection of data
-- Immutable, lazily evaluated and cacheable
-- Fault-tolerant “in-memory” computations
-- Parallel operation - partitioned
-- Ability to use many data sources
+- “In-memory” computations: The concept of in-memory computation takes the data processing to a faster and efficient
+  stage where the overall performance of the system is upgraded.
+- Distributed collection of data and cacheable: The resultant RDDs are always persistable and reusable.
+- Lazily evaluated: The term Lazy evaluation says the transformations are applied to the data in RDD, but the output is
+  not generated. Instead, the applied transformations are **logged**.
+- Fault Tolerant: If there is a loss of data, the system can roll back to its original state by using the logged
+  transformations.
+- Parallel operation - partitioned: It is the crucial unit of parallelism in Spark RDD. By default, the number of
+  partitions created is based on our data source. We can even decide the number of partitions we wish to make using
+  custom partition functions.
+- Immutability: Data defined, retrieved or created cannot be changed once it is logged into the system. In case if we
+  need to access and modify the existing RDD, we must create a new RDD by applying a set of **Transformation** functions
+  on to the current or preceding RDD.
+- Coarse-Grained Operations: The user can apply transformations to all elements in data sets through map, filter or
+  group by operations.
+- Ability to use various data sources: text file, csv, json, zipped, MongoDb, Cassandra, AWS S3, MySQL, HBase, etc.
 
-![RDD Workflow](RDDWorkflow.PNG)
+![RDD Workflow](RDDWorkflow.png)
 
 RDDs support 2 kinds of operations:
 
@@ -337,14 +357,39 @@ RDDs support 2 kinds of operations:
    transformer takes RDD as input and produces one or more RDD as output. Transformations are **lazy** in nature i.e.,
    they get execute when we call an action.
 
+We can divide transformations into two types as below:
+
+- Narrow Transformations : We apply narrow transformations on to a single partition of the parent RDD to generate a new
+  RDD as data required to process the RDD is available on a single partition of the parent RDD. The examples for narrow
+  transformations are:
+    - map()
+    - filter()
+    - flatMap()
+    - partition()
+    - mapPartitions()
+
+- Wide Transformations: We apply the wide transformation on multiple partitions to generate a new RDD. The data required
+  to process the RDD is available on the multiple partitions of the parent RDD. The examples for wide transformations
+  are:
+    - reduceBy()
+    - union()
+
 2. **Action** – transformations create RDDs from each other, but when we want to work with the actual data set, at that
    point action is performed. Thus, Actions are Spark RDD operations that give non-RDD values. The values of action are
    stored to drivers or to the external storage system.
 
+Few of the actions include:
+
+- collect()
+- count()
+- take()
+- first()
+
 An action is one of the ways of sending data from **Executor** to the driver.
 
 **Executors** are agents that are responsible for executing a task. While the driver is a JVM process that coordinates
-workers and execution of the task. Some actions of Spark are count and collect.
+workers and execution of the task.
+
 
 ---
 
