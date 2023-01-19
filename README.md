@@ -242,6 +242,10 @@ connected, Spark acquires executors on nodes in the cluster, which are processes
 for our application. Next, it sends our application code (defined by JAR or Python files passed to `SparkContext`) to
 the executors. Finally, `SparkContext` sends tasks to the executors to run.
 
+#### Youtube
+
+- [07 - Apache Spark for Java Developers - Cluster Mode Overview](https://youtu.be/WIZPjSGW78Q)
+
 To dig deeper into the internals of job execution in Spark:
 
 ![Spark Architecture](SparkInternals.png)
@@ -300,6 +304,10 @@ Few more points to note,
 - Because the driver schedules tasks on the cluster, it should be run close to the worker nodes, preferably on the same
   local area network. If we’d like to send requests to the cluster remotely, it’s better to open an RPC to the driver
   and have it submit operations from nearby than to run a driver far away from the worker nodes.
+
+#### Youtube
+
+- [08 - Apache Spark for Java Developers - Internals of Job Execution](https://youtu.be/GGBsUJqUwa0)
 
 #### 1.6 Spark RDDs
 
