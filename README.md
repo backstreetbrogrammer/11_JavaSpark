@@ -349,7 +349,7 @@ RDD has these main features:
   group by operations.
 - Ability to use various data sources: text file, csv, json, zipped, MongoDb, Cassandra, AWS S3, MySQL, HBase, etc.
 
-![RDD Workflow](RDDWorkflow.png)
+![RDD Operations](RDDWorkflow.png)
 
 RDDs support 2 kinds of operations:
 
