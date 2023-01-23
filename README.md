@@ -402,11 +402,15 @@ workers and execution of the task.
 
 ### Chapter 02. Spark Installation and IntelliJ Project Setup
 
-#### 2.1 JDK, Maven and IntelliJ installation
+#### 2.1 JDK, Scala, Maven and IntelliJ installation
 
 - **JDK 11 download**: https://jdk.java.net/archive/
 
   Windows zip: https://download.java.net/java/GA/jdk11/13/GPL/openjdk-11.0.1_windows-x64_bin.zip
+
+- **Scala installation**: https://www.scala-lang.org/download/2.13.10.html
+
+  Windows msi: https://downloads.lightbend.com/scala/2.13.10/scala-2.13.10.msi
 
 - **Maven download**: https://maven.apache.org/download.cgi
 
