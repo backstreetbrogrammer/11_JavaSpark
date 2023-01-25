@@ -422,6 +422,10 @@ workers and execution of the task.
 
 - Set JAVA_HOME, M2_HOME, MAVEN_HOME system variables and set in PATH
 
+#### Youtube
+
+- [11 - JDK, Scala, Maven and IntelliJ installation](https://youtu.be/VN4k73Q7WjA)
+
 #### 2.2 Download Apache Spark and Hadoop
 
 1. Download Apache Spark version 3.3.1 from [spark official site](https://spark.apache.org/downloads.html)
@@ -437,6 +441,10 @@ workers and execution of the task.
 
 Download [winutils.exe](https://github.com/steveloughran/winutils/blob/master/hadoop-3.0.0/bin/winutils.exe) and place
 it in local `%SPARK_HOME%\bin` folder.
+
+#### Youtube
+
+- [12 - Apache Spark and Hadoop installation](https://youtu.be/LcRxQjTdD1o)
 
 #### 2.4 Verify Spark installation
 
@@ -498,6 +506,10 @@ res6: Long = 5
 ```
 scala> :quit
 ```
+
+#### Youtube
+
+- [13 - Apache Spark for Java Developers - Shell Commands](https://youtu.be/U9wM_SxCPLU)
 
 #### 2.5 IntelliJ Project Setup - Maven
 
