@@ -30,7 +30,16 @@ machines.
     - Cluster Mode Overview
     - Spark RDDs
 2. Spark Installation and IntelliJ Project Setup
+    - JDK, Scala, Maven and IntelliJ installation
+    - Apache Spark and Hadoop installation
+    - Download winutils.exe and hadoop.dll (only for Windows)
+    - Verify Spark installation using Spark Shell
+    - IntelliJ Project Setup - Maven
 3. Spark RDD - First Program
+    - SparkContext
+    - SparkSession
+    - Initializing Spark
+    - Spark Web UI
 4. Create RDD using parallelize()
 5. Create RDD using External Datasets
 6. Spark RDD Actions - reduce(), fold(), aggregate()
@@ -437,10 +446,12 @@ workers and execution of the task.
 6. Add to the `PATH` environment, the `%SPARK_HOME%\bin`
 7. Add to the `PATH` environment, the `%HADOOP_HOME%\bin`
 
-#### 2.3 Download winutils.exe (only for Windows)
+#### 2.3 Download winutils.exe and hadoop.dll (only for Windows)
 
-Download [winutils.exe](https://github.com/steveloughran/winutils/blob/master/hadoop-3.0.0/bin/winutils.exe) and place
-it in local `%SPARK_HOME%\bin` folder.
+- Download [winutils.exe](https://github.com/cdarlint/winutils/blob/master/hadoop-3.2.2/bin/winutils.exe) and place it
+  in local `%SPARK_HOME%\bin` folder.
+- Download [hadoop.dll](https://github.com/cdarlint/winutils/blob/master/hadoop-3.2.2/bin/hadoop.dll) and place it in
+  local `%SPARK_HOME%\bin` folder.
 
 #### Youtube
 
@@ -584,12 +595,35 @@ Spark supports 2 types of shared variables:
 - **broadcast variables** => to cache a value in memory on all nodes
 - **accumulators** => variables that are only “added” to, such as counters and sums
 
+#### SparkContext
+
+`SparkContext` has been available since Spark 1.x versions, and it’s an entry point to Spark when we want to program and
+use Spark RDD. Most of the operations/methods or functions we use in Spark comes from `SparkContext` for example
+accumulators, broadcast variables, parallelize and more.
+
+#### SparkSession
+
+Since Spark 2.0, `SparkSession` has become an entry point to Spark to work with RDD, DataFrame, and Dataset. Prior to
+2.0, `SparkContext` used to be an entry point.
+
+We can create as many `SparkSession` as we want in a Spark application using either `SparkSession.builder()` or
+`SparkSession.newSession()`.
+
 #### Initializing Spark
 
 1. Build a `SparkConf` object that contains information about the application
 
 ```
 final var conf = new SparkConf().setAppName("SparkFirstProgram").setMaster("local[*]");
+```
+
+OR, we can create a `SparkSession` object containing all the above configurations.
+
+```
+final var spark = SparkSession.builder()
+                              .appName("SparkFirstProgram")
+                              .master("local[*]")
+                              .getOrCreate();
 ```
 
 The `appName` parameter is a name for the application to show on the cluster UI.
@@ -606,8 +640,17 @@ for local testing and unit tests, we can pass “local” to run Spark in-proces
 2. Create a `JavaSparkContext` object which tells Spark how to access a cluster, by passing the `SparkConf` object to
    its constructor
 
+- JavaSparkContext(SparkConf conf)
+
 ```
 final var sc = new JavaSparkContext(conf);
+```
+
+- JavaSparkContext(SparkContext sc)
+
+```
+// Using SparkSession
+final var sc = new JavaSparkContext(spark.sparkContext());
 ```
 
 3. Create RDD which is a fault-tolerant collection of elements that can be operated on in parallel
@@ -618,11 +661,81 @@ There are two ways to create RDDs:
 - referencing a dataset in an **external storage system**, such as a shared filesystem, HDFS, HBase, or any data source
   offering a Hadoop `InputFormat`
 
-4. Spark UI can be viewed in browser using default port of 4040:
+
+4. Various **Transformations** (map, filter, etc.) and **Actions** (count, collect, etc.) can be called on RDD
+
+#### Spark Web UI
+
+Spark Web UI can be viewed in browser using default port of 4040:
 
 ```
 http://localhost:4040/
 ```
+
+Spark UI is separated into following tabs:
+
+1. Jobs
+
+The details provided in this tab are:
+
+- Scheduling mode: As we are running on a local machine, its **Standalone mode**. The standalone cluster mode currently
+  only supports a simple FIFO scheduler across applications.
+- Number of Spark Jobs: The number of Spark jobs is equal to the number of **actions** in the application and each Spark
+  job should have at least one **Stage**.
+- Number of Stages: Only **Wide Transformation** results in a separate Number of Stages.
+- Description: Description links the complete details of the associated **SparkJob** like Spark Job Status, DAG
+  Visualization, Completed Stages, etc.
+
+2. Stages
+
+We can navigate into Stages tab in two ways:
+
+- Select the **Description** of the respective Spark job
+- On the top of Spark Web UI: select **Stages** tab
+
+The Stages tab displays a summary page that shows the current state of all stages of all Spark jobs in the spark
+application.
+
+The number of **Tasks** we could see in each stage is the number of **partitions** that Spark is going to work on and
+each task inside a stage is the same work that will be done by spark but on a different partition of data.
+
+**DAG Visualization**: Displays Directed Acyclic Graph (DAG) of this stage, where vertices represent the RDDs or
+DataFrame and edges represent an operation to be applied.
+
+**ParallelCollectionRDD** is created when we create a RDD with a collection object.
+
+3. Storage
+
+The Storage tab displays the persisted RDDs and DataFrames, if any, in the application. The **Summary** page shows the
+storage levels, sizes and partitions of all RDDs, and the **Details** page shows the sizes and using executors for all
+partitions in an RDD or DataFrame.
+
+4. Environment
+
+The Environment tab displays the values for the different environment and configuration variables, including JVM, Spark,
+and system properties. It is a useful place to check whether our Spark application properties have been set correctly.
+
+This Environment tab has 6 parts:
+
+- Runtime Information: simply contains the runtime properties like versions of Java and Scala
+- Spark Properties: lists the application properties like `spark.app.name` and `spark.driver.extraJavaOptions`
+- Resource Profiles: gives details about Executor and Tasks cpu and memory usages
+- Hadoop Properties: displays very detailed properties relative to Hadoop, HDFS and YARN
+- System Properties: shows more details about the JVM
+- Classpath Entries: lists the classes loaded from different sources, which is very useful to resolve class conflicts.
+
+5. Executors
+
+The Executors tab displays:
+
+- **Summary**
+  Information about the executors that were created for the application, including memory, disk usage, task and shuffle
+  information (if any). The **Storage Memory** column shows the amount of memory **used** and **reserved** for caching
+  data.
+
+- **Executors**
+  Provides more detailed resource information like amount of memory, disk, and cores used by each executor. **Thread
+  Dump** for executor driver can be clicked to see the whole thread dump.
 
 ---
 
