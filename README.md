@@ -573,6 +573,9 @@ Complete `pom.xml` can be found at Github:
 
 Run Maven Verify command to ensure Maven setup is complete: `mvn verify`
 
+#### Youtube
+
+- [14 - Apache Spark for Java Developers - IntelliJ Project Maven Setup](https://youtu.be/lw-U8y-DiEA)
 
 ---
 
