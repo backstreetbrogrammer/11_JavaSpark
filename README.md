@@ -612,6 +612,10 @@ Since Spark 2.0, `SparkSession` has become an entry point to Spark to work with 
 We can create as many `SparkSession` as we want in a Spark application using either `SparkSession.builder()` or
 `SparkSession.newSession()`.
 
+#### Youtube
+
+- [15 - Apache Spark First Java Program - Theory](https://youtu.be/8C5zOVVxGSE)
+
 #### Initializing Spark
 
 1. Build a `SparkConf` object that contains information about the application
@@ -656,6 +660,11 @@ final var sc = new JavaSparkContext(conf);
 final var sc = new JavaSparkContext(spark.sparkContext());
 ```
 
+#### Youtube
+
+- [16 - Apache Spark First Java Program - Create JavaSparkContext](https://youtu.be/5F8XrorD11U)
+- [17 - Apache Spark First Java Program - Understand Spark configuration](https://youtu.be/MW8jqOQ7nMY)
+
 3. Create RDD which is a fault-tolerant collection of elements that can be operated on in parallel
 
 There are two ways to create RDDs:
@@ -664,8 +673,12 @@ There are two ways to create RDDs:
 - referencing a dataset in an **external storage system**, such as a shared filesystem, HDFS, HBase, or any data source
   offering a Hadoop `InputFormat`
 
-
 4. Various **Transformations** (map, filter, etc.) and **Actions** (count, collect, etc.) can be called on RDD
+
+#### Youtube
+
+- [18 - Apache Spark First Java Program - Create Spark RDD](https://youtu.be/H2a34mu_8wk)
+- [19 - Apache Spark First Java Program - Spark RDD Reduce Method](https://youtu.be/6XATrvANmaY)
 
 #### Spark Web UI
 
