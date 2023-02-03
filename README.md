@@ -753,11 +753,17 @@ The Executors tab displays:
   Provides more detailed resource information like amount of memory, disk, and cores used by each executor. **Thread
   Dump** for executor driver can be clicked to see the whole thread dump.
 
+#### Youtube
+
+- [20 - Spark Web UI - Jobs tab](https://youtu.be/2_WDDVAsSlU)
+- [21 - Spark Web UI - Stages, Storage and Environment tabs](https://youtu.be/_KxEwh-pM2g)
+- [22 - Spark Web UI - Executors tab](https://youtu.be/WqUJUMwqzI8)
+
 ---
 
 ### Chapter 04. Create RDD using parallelize()
 
-Parallelized collections are created by calling JavaSparkContext’s `parallelize() `method on an existing
+Parallelized collections are created by calling JavaSparkContext’s `parallelize()` method on an existing
 `Collection` in the **driver** program. The elements of the collection are copied to form a **RDD** that can be operated
 on in parallel.
 
