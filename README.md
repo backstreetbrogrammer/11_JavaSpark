@@ -804,6 +804,12 @@ We can also create Empty RDDs by calling `emptyRDD()` method on `JavaSparkContex
 final var emptyRDD = sparkContext.emptyRDD();
 ```
 
+#### Youtube
+
+- [23 - Create RDD using parallelize method - Theory](https://youtu.be/6XfTQTpVQiA)
+- [24 - Create Empty RDD using parallelize method - Code Demo](https://youtu.be/g_5mO1MGIus)
+- [25 - Create Spark RDD from Java Collection using parallelize method - Code Demo](https://youtu.be/oLyta4sSn-w)
+
 ---
 
 ### Chapter 05. Create RDD using External Datasets
