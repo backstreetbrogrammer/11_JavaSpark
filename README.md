@@ -901,6 +901,11 @@ Example:
             final var myRdd = sparkContext.textFile("s3a://backstreetbrogrammer/spark/1000words.txt");
 ```
 
+#### Youtube
+
+- [26 - Create Spark RDD using External Datasets - Theory](https://youtu.be/zyXVDRvN4GA)
+- [27 - Create Spark RDD using External Datasets - Unit Test Code Demo 1](https://youtu.be/F5SaCBDia-I)
+
 ---
 
 ### Chapter 06. Spark RDD Actions - reduce(), fold(), aggregate()
