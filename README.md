@@ -905,6 +905,9 @@ Example:
 
 - [26 - Create Spark RDD using External Datasets - Theory](https://youtu.be/zyXVDRvN4GA)
 - [27 - Create Spark RDD using External Datasets - Unit Test Code Demo 1](https://youtu.be/F5SaCBDia-I)
+- [28 - Create Spark RDD using External Datasets - Unit Test Code Demo 2](https://youtu.be/of5q7SHso9s)
+- [29 - Create Spark RDD from whole directory - Unit Test Code Demo 3](https://youtu.be/KmNZdrDbHfw)
+- [30 - Create Spark RDD from CSV file - Unit Test Code Demo 4](https://youtu.be/l1caOgH01zI)
 
 ---
 

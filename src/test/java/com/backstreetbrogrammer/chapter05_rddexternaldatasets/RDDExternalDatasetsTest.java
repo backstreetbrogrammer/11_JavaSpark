@@ -54,7 +54,7 @@ public class RDDExternalDatasetsTest {
 
     @Test
     @DisplayName("Test loading whole directory into Spark RDD")
-    void testLoadingWholeDirectoryIntoSparkRDDUsingMethodSource() {
+    void testLoadingWholeDirectoryIntoSparkRDD() {
         try (final var sparkContext = new JavaSparkContext(sparkConf)) {
             final String testDirPath = Path.of("src", "test", "resources").toString();
             final var myRdd = sparkContext.wholeTextFiles(testDirPath);
