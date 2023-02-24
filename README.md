@@ -898,7 +898,7 @@ Example:
             sparkContext.hadoopConfiguration().set("fs.s3a.endpoint", "s3.amazonaws.com");
 
             // Read a single text file
-            final var myRdd = sparkContext.textFile("s3a://backstreetbrogrammer/spark/1000words.txt");
+            final var myRdd = sparkContext.textFile("s3a://backstreetbrogrammer-bucket/1TrillionWords.txt.gz");
 ```
 
 #### Youtube
@@ -908,6 +908,7 @@ Example:
 - [28 - Create Spark RDD using External Datasets - Unit Test Code Demo 2](https://youtu.be/of5q7SHso9s)
 - [29 - Create Spark RDD from whole directory - Unit Test Code Demo 3](https://youtu.be/KmNZdrDbHfw)
 - [30 - Create Spark RDD from CSV file - Unit Test Code Demo 4](https://youtu.be/l1caOgH01zI)
+- [31 - Create Spark RDD from AWS S3 Bucket File - Unit Test Code Demo 5](https://youtu.be/9flt2H8YiDQ)
 
 ---
 
