@@ -979,6 +979,13 @@ accumulator for each partition. We mostly use 0 for integer and empty for collec
 - `aggregate()` is similar to `fold()` and `reduce()` except it returns RDD of any type whereas other 2 returns same RDD
   type.
 
+#### Youtube
+
+- [32 - Spark RDD Actions - reduce() - Code Demo 1](https://youtu.be/E1WpxgePSsY)
+- [33 - Spark RDD Actions - reduce() - Code Demo 2](https://youtu.be/nZ-R42RXV7k)
+- [34 - Spark RDD Actions - fold() - Code Demo](https://youtu.be/DLaSjq3sJrw)
+- [35 - Spark RDD Actions - aggregate() - Code Demo](https://youtu.be/w6xzvI35VEw)
+
 ---
 
 ### Chapter 07. Spark RDD Transformations - map(), flatMap(), filter()
