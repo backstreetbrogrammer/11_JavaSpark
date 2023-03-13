@@ -72,7 +72,11 @@ public class RDDReduceTest {
             final Instant start = Instant.now();
             for (int i = 0; i < noOfIterations; i++) {
                 final var sum = myRdd.aggregate(0D, Double::sum, Double::sum);
-                System.out.println("[Spark RDD Aggregate] SUM:" + sum);
+                final var max = myRdd.aggregate(0D, Double::sum, Double::max);
+                final var min = myRdd.aggregate(0D, Double::sum, Double::min);
+                System.out.println("[Spark RDD Aggregate] SUM: " + sum);
+                System.out.println("[Spark RDD Aggregate] MAX for all partitions: " + max);
+                System.out.println("[Spark RDD Aggregate] MIN for all partitions: " + min);
             }
             final long timeElapsed = (Duration.between(start, Instant.now()).toMillis()) / noOfIterations;
             System.out.printf("[Spark RDD Aggregate] time taken: %d ms%n%n", timeElapsed);
