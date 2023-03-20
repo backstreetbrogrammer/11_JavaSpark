@@ -1055,6 +1055,12 @@ final var words = lines.flatMap(line -> List.of(line.split("\\s")).iterator());
 final var filteredWords = words.filter(word -> ((word != null) && (word.trim().length() > 0)));
 ```
 
+#### Youtube
+
+- [36 - Spark RDD Transformations - map(), flatMap(), filter()](https://youtu.be/AptmZeSkbag)
+- [37 - Spark RDD Transformations - Unit Test Code Demo](https://youtu.be/mlki4n9fkDE)
+- [38 - Spark RDD Transformations - map() - Code Demo 1](https://youtu.be/iP_y_4yUXKY)
+
 ---
 
 ### Chapter 08. Spark RDD - Printing elements
