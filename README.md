@@ -1060,6 +1060,8 @@ final var filteredWords = words.filter(word -> ((word != null) && (word.trim().l
 - [36 - Spark RDD Transformations - map(), flatMap(), filter()](https://youtu.be/AptmZeSkbag)
 - [37 - Spark RDD Transformations - Unit Test Code Demo](https://youtu.be/mlki4n9fkDE)
 - [38 - Spark RDD Transformations - map() - Code Demo 1](https://youtu.be/iP_y_4yUXKY)
+- [39 - Spark RDD Transformations - map() using collect() - Code Demo 2](https://youtu.be/J_d61gNYh5Y)
+- [40 - Spark RDD Transformations - map() using reduce() - Code Demo 3](https://youtu.be/_BxO95FVHSQ)
 
 ---
 
