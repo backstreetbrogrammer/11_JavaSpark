@@ -22,6 +22,10 @@ public class RDDFlatMapsTest {
             final var lines = sc.textFile(testFilePath);
             System.out.printf("Total lines in file %d%n", lines.count());
 
+            final var mappedLines = lines.map(line -> List.of(line.split("\\s")));
+            System.out.printf("Total lines in file %d%n", mappedLines.count());
+            assertEquals(lines.count(), mappedLines.count());
+
             final var words = lines.flatMap(line -> List.of(line.split("\\s")).iterator());
             System.out.printf("Total number of words in the file~>%d%n", words.count());
 
