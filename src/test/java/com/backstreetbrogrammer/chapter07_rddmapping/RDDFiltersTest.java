@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.nio.file.Path;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class RDDFiltersTest {
 
     @Test
@@ -24,6 +26,7 @@ public class RDDFiltersTest {
 
             final var filteredWords = words.filter(word -> ((word != null) && (word.trim().length() > 0)));
             System.out.printf("Total number of words after filtering~>%d%n", filteredWords.count());
+            assertTrue(filteredWords.count() < words.count());
 
             System.out.println("First few words:");
             filteredWords.take(10).forEach(System.out::println);
