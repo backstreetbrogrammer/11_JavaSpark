@@ -1098,6 +1098,10 @@ machine; if we only need to print a few elements of the RDD, a safer approach is
 rdd.take(100).foreach(println)
 ```
 
+#### Youtube
+
+- [44 - Spark RDD - Printing elements](https://youtu.be/mKVSJ67MY18)
+
 ---
 
 ### Chapter 09. Spark RDD - Tuples
