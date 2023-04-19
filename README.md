@@ -1102,6 +1102,7 @@ rdd.take(100).foreach(println)
 
 - [44 - Spark RDD - Printing elements](https://youtu.be/mKVSJ67MY18)
 - [45 - Spark RDD - Printing elements using Spark foreach()](https://youtu.be/25o2uViP4Zw)
+- [46 - Spark RDD - Printing elements using Spark collect()](https://youtu.be/v3JusAAuL8w)
 
 ---
 
