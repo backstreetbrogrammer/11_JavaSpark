@@ -1130,13 +1130,19 @@ Example:
 final var tuple2JavaRDD = myRdd.map(line -> new Tuple2<>(line, line.length()));
 ```
 
+#### Youtube
+
+- [48 - Spark RDD - Tuples](https://youtu.be/s7z8MQyKQos)
+- [49 - Spark RDD - Tuples - Code Demo 1](https://youtu.be/QuLA5Ymzor0)
+- [50 - Spark RDD - Tuples - Code Demo 2](https://youtu.be/TDJtOOxqR-U)
+
 ---
 
 ### Chapter 10. Spark RDD - PairRDDs
 
 While most Spark operations work on RDDs containing any type of objects, a few special operations are only available on
-RDDs of **key-value pairs**. The most common ones are distributed “shuffle” operations, such as grouping or aggregating
-the elements by a key.
+RDDs of **key-value pairs**. The most common ones are distributed **"shuffle"** operations, such as grouping or
+aggregating the elements by a key.
 
 In Java, key-value pairs are represented using the `scala.Tuple2` class from the Scala standard library. We can simply
 call `new Tuple2(a, b)` to create a tuple, and access its fields later with `tuple._1()` and `tuple._2()`.
