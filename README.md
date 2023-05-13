@@ -20,48 +20,47 @@ machines.
 
 ## Table of contents
 
-### Part I - Spark RDD
+### [Part I - Spark RDD](https://github.com/backstreetbrogrammer/11_JavaSpark#part-i---spark-rdd)
 
-1. The Big Picture
+1. [The Big Picture](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-01-the-big-picture)
     - Big Data
     - Local versus Distributed Systems
     - Apache Hadoop and MapReduce
     - Apache Spark Ecosystem
     - Cluster Mode Overview
     - Spark RDDs
-2. Spark Installation and IntelliJ Project Setup
+2. [Spark Installation and IntelliJ Project Setup](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-02-spark-installation-and-intellij-project-setup)
     - JDK, Scala, Maven and IntelliJ installation
     - Apache Spark and Hadoop installation
     - Download winutils.exe and hadoop.dll (only for Windows)
     - Verify Spark installation using Spark Shell
     - IntelliJ Project Setup - Maven
-3. Spark RDD - First Program
+3. [Spark RDD - First Program](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-03-spark-rdd---first-program)
     - SparkContext
     - SparkSession
     - Initializing Spark
     - Spark Web UI
-4. Create RDD using parallelize()
-5. Create RDD using External Datasets
-6. Spark RDD Actions - reduce(), fold(), aggregate()
-7. Spark RDD Transformations - map(), flatMap(), filter()
-8. Spark RDD - Printing elements
-9. Spark RDD - Tuples
-10. Spark RDD - PairRDDs
-11. Exercise 1 - Unique Word Count
-12. Spark RDD - repartition(), coalesce()
-13. Spark RDD - Joins
-14. Spark RDD - Shuffles
-15. Spark RDD - Persistence
+4. [Create RDD using `parallelize()`](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-04-create-rdd-using-parallelize)
+5. [Create RDD using External Datasets](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-05-create-rdd-using-external-datasets)
+6. [Spark RDD Actions - `reduce()`, `fold()`, `aggregate()`](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-06-spark-rdd-actions---reduce-fold-aggregate)
+7. [Spark RDD Transformations - `map()`, `flatMap()`, `filter()`](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-07-spark-rdd-transformations---map-flatmap-filter)
+8. [Spark RDD - Printing elements](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-08-spark-rdd---printing-elements)
+9. [Spark RDD - Tuples](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-09-spark-rdd---tuples)
+10. [Spark RDD - PairRDDs](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-10-spark-rdd---pairrdds)
+11. [Exercise 1 - Unique Word Count](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-11-exercise-1---unique-word-count)
+12. [Spark RDD - `repartition()`, `coalesce()`](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-12-spark-rdd---repartition-coalesce)
+13. [Spark RDD - Joins](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-13-spark-rdd---joins)
+14. [Spark RDD - Shuffles](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-14-spark-rdd---shuffles)
+15. [Spark RDD - Persistence](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-15-spark-rdd---persistence)
     - Cache vs Persist
     - Persistence Storage Levels
-16. Spark RDD - Closures and Shared Variables
+16. [Spark RDD - Closures and Shared Variables](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-16-spark-rdd---closures-and-shared-variables)
     - Accumulators
     - Broadcast Variables
-17. Exercises and Solutions
-18. Spark RDD - Submitting applications
-19. Databricks and AWS EMR
-20. Introduction to Kryo Serialization
-21. Tuning Spark
+17. Spark RDD - Submitting applications
+18. Databricks and AWS EMR
+19. Introduction to Kryo Serialization
+20. Tuning Spark
 
 ### Part II - Spark SQL
 
@@ -1469,7 +1468,11 @@ the [API documentation](https://spark.apache.org/docs/latest/api/scala/org/apach
 
 ---
 
-### Chapter 19. Databricks and AWS EMR
+### Chapter 17. Spark RDD - Submitting applications
+
+---
+
+### Chapter 18. Databricks and AWS EMR
 
 In production, there are always 2 choices to work with Big Data, Clusters and Apache Spark:
 
@@ -1570,3 +1573,14 @@ spark-submit \
   <application-jar> \
   <application-arguments>
 ```
+
+---
+
+### Chapter 19. Introduction to Kryo Serialization
+
+---
+
+### Chapter 20. Tuning Spark
+
+
+
