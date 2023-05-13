@@ -57,10 +57,10 @@ machines.
 16. [Spark RDD - Closures and Shared Variables](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-16-spark-rdd---closures-and-shared-variables)
     - Accumulators
     - Broadcast Variables
-17. Spark RDD - Submitting applications
-18. Databricks and AWS EMR
-19. Introduction to Kryo Serialization
-20. Tuning Spark
+17. [Spark RDD - Submitting applications](https://github.com/backstreetbrogrammer/11_JavaSpark#part-i---spark-rdd)
+18. [Databricks and AWS EMR](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-18-databricks-and-aws-emr)
+19. [Introduction to Kryo Serialization](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-19-introduction-to-kryo-serialization)
+20. [Tuning Spark](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-20-tuning-spark)
 
 ### Part II - Spark SQL
 
