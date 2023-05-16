@@ -1146,9 +1146,12 @@ aggregating the elements by a key.
 In Java, key-value pairs are represented using the `scala.Tuple2` class from the Scala standard library. We can simply
 call `new Tuple2(a, b)` to create a tuple, and access its fields later with `tuple._1()` and `tuple._2()`.
 
-RDDs of key-value pairs are represented by the `JavaPairRDD` class. We can construct `JavaPairRDDs` from `JavaRDDs`
+RDDs of key-value pairs are represented by the `JavaPairRDD` class. We can construct `JavaPairRDD` from `JavaRDD`
 using special versions of the map operations, like `mapToPair` and `flatMapToPair`. The `JavaPairRDD` will have both
 standard RDD functions and special key-value ones.
+
+One big difference between a Java `Map` and Spark's `JavaPairRDD` is that `Map` should contain **unique keys** but
+`JavaPairRDD` can have **duplicate keys**. 
 
 For example, the following code uses the `reduceByKey` operation on key-value pairs to count how many times each line of
 text occurs in a file:
