@@ -1168,6 +1168,10 @@ bring them back to the driver program as an array of objects.
 When using custom objects as the key in key-value pair operations, we must be sure that a custom `equals()` method is
 accompanied by a matching `hashCode()` method.
 
+#### Youtube
+
+- [51 - Spark RDD - PairRDD](https://youtu.be/Jknd4_s3m0w)
+
 ---
 
 ### Chapter 11. Exercise 1 - Unique Word Count
