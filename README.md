@@ -1171,6 +1171,10 @@ accompanied by a matching `hashCode()` method.
 #### Youtube
 
 - [51 - Spark RDD - PairRDD](https://youtu.be/Jknd4_s3m0w)
+- [52 - Spark RDD - PairRDD - MapToPair](https://youtu.be/13F3VuwjjrI)
+- [53 - Spark RDD - PairRDD - ReduceByKey](https://youtu.be/A_6tK4LalaA)
+- [54 - Spark RDD - PairRDD - GroupByKey](https://youtu.be/g5LQB3xwY2Q)
+- [55 - Spark RDD - PairRDD - Distinct](https://youtu.be/wzX_bm6wudg)
 
 ---
 
