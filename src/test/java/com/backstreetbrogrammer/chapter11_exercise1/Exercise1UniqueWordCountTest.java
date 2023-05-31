@@ -23,10 +23,6 @@ public class Exercise1UniqueWordCountTest {
                         .flatMap(line -> List.of(line.split("\\s")).iterator())
                         .filter(word -> ((word != null) && (word.trim().length() > 0)));
 
-        /*System.out.println("First few words:");
-        filteredWords.take(10).forEach(System.out::println);
-        System.out.println("--------------------");*/
-
             final var counts
                     = filteredWords.mapToPair(word -> new Tuple2<>(word, 1L))
                                    .reduceByKey(Long::sum);

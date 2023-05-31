@@ -1151,7 +1151,7 @@ using special versions of the map operations, like `mapToPair` and `flatMapToPai
 standard RDD functions and special key-value ones.
 
 One big difference between a Java `Map` and Spark's `JavaPairRDD` is that `Map` should contain **unique keys** but
-`JavaPairRDD` can have **duplicate keys**. 
+`JavaPairRDD` can have **duplicate keys**.
 
 For example, the following code uses the `reduceByKey` operation on key-value pairs to count how many times each line of
 text occurs in a file:
@@ -1202,6 +1202,10 @@ Example output _(word, count)_ :
 Meaning that word "someone" appeared total 5 times in the given file.
 
 #### Bonus Task: Find the top 10 words with maximum counts
+
+#### Youtube
+
+- [56 - Spark RDD - Exercise 1 - Unique Word Count](https://youtu.be/KwnnqaEzj7w)
 
 ---
 
