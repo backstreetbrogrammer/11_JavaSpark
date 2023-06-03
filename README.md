@@ -1206,6 +1206,9 @@ Meaning that word "someone" appeared total 5 times in the given file.
 #### Youtube
 
 - [56 - Spark RDD - Exercise 1 - Unique Word Count](https://youtu.be/KwnnqaEzj7w)
+- [57 - Spark RDD - SOLUTION1 - Exercise 1 - Unique Word Count](https://youtu.be/Xd3b8VbMXHw)
+- [58 - Spark RDD - SOLUTION2 - Exercise 1 - Unique Word Count](https://youtu.be/HjFnG9_B9Rk)
+- [59 - Spark RDD - SOLUTION3 - Exercise 1 - Unique Word Count](https://youtu.be/bCbOv7v7eRA)
 
 ---
 
