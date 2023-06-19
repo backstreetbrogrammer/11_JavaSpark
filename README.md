@@ -1247,6 +1247,10 @@ final var newRdd = myRdd.coalesce(2);
 One important point to note is that `repartition()` and `coalesce()` methods are very expensive operations as they
 shuffle the data across many partitions; hence we should try to minimize repartition as much as possible.
 
+#### Youtube
+
+- [60 - Spark RDD - Repartition and Coalesce](https://youtu.be/sfQfvPDu8qs)
+
 ---
 
 ### Chapter 13. Spark RDD - Joins
