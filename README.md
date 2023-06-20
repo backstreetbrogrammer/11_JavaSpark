@@ -1250,6 +1250,9 @@ shuffle the data across many partitions; hence we should try to minimize reparti
 #### Youtube
 
 - [60 - Spark RDD - Repartition and Coalesce](https://youtu.be/sfQfvPDu8qs)
+- [61 - Spark RDD - Repartition - Code Demo 1](https://youtu.be/fdredXbnSzA)
+- [62 - Spark RDD - Repartition - Code Demo 2](https://youtu.be/E4reywJCc8M)
+- [63 - Spark RDD - Coalesce - Code Demo 3](https://youtu.be/XrZdlC6n2o8)
 
 ---
 
