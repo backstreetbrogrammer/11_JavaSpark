@@ -1290,6 +1290,12 @@ Transformation: `cartesian(otherDataset)`
 
 > When called on datasets of types T and U, returns a dataset of (T, U) pairs (all pairs of elements).
 
+#### Youtube
+
+- [64 - Spark RDD - Joins - Code Demo 1](https://youtu.be/j1jNr6vPVq4)
+- [65 - Spark RDD - Inner Joins - Code Demo 2](https://youtu.be/X9wxykf78fY)
+- [66 - Spark RDD - Left Outer Joins - Code Demo 3](https://youtu.be/XypnnRw-jPQ)
+
 ---
 
 ### Chapter 14. Spark RDD - Shuffles
