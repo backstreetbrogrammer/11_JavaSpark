@@ -32,7 +32,7 @@ machines.
 2. [Spark Installation and IntelliJ Project Setup](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-02-spark-installation-and-intellij-project-setup)
     - JDK, Scala, Maven and IntelliJ installation
     - Apache Spark and Hadoop installation
-    - Download winutils.exe and hadoop.dll (only for Windows)
+    - Download `winutils.exe` and `hadoop.dll` (only for `Windows`)
     - Verify Spark installation using Spark Shell
     - IntelliJ Project Setup - Maven
 3. [Spark RDD - First Program](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-03-spark-rdd---first-program)
@@ -1295,6 +1295,9 @@ Transformation: `cartesian(otherDataset)`
 - [64 - Spark RDD - Joins - Code Demo 1](https://youtu.be/j1jNr6vPVq4)
 - [65 - Spark RDD - Inner Joins - Code Demo 2](https://youtu.be/X9wxykf78fY)
 - [66 - Spark RDD - Left Outer Joins - Code Demo 3](https://youtu.be/XypnnRw-jPQ)
+- [67 - Spark RDD - Right Outer Joins - Code Demo 4](https://youtu.be/YlQ7lu98V6s)
+- [68 - Spark RDD - Full Outer Joins - Code Demo 5](https://youtu.be/sIYvfdcuW9A)
+- [69 - Spark RDD - Cartesian Joins - Code Demo 6](https://youtu.be/mO622eCfsaM)
 
 ---
 
