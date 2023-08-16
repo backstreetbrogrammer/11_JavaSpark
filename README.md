@@ -1344,6 +1344,10 @@ Hence, when we run the `reduceByKey()` operation to aggregate the data on keys, 
 - Run the garbage collection.
 - Finally, runs reduce tasks on each partition based on key.
 
+#### Youtube
+
+- [70 - Spark RDD - Shuffles](https://youtu.be/7K1yIReMSNU)
+
 ---
 
 ### Chapter 15. Spark RDD - Persistence
