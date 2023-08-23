@@ -1348,6 +1348,7 @@ Hence, when we run the `reduceByKey()` operation to aggregate the data on keys, 
 
 - [70 - Spark RDD - Shuffles](https://youtu.be/7K1yIReMSNU)
 - [71 - Spark RDD - Shuffles - Code Demo 1](https://youtu.be/HOZ5d2VZGRE)
+- [72 - Spark RDD - Shuffles - Code Demo 2](https://youtu.be/zjBUXDZs7I0)
 
 ---
 
