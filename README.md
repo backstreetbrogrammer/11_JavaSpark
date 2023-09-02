@@ -1398,6 +1398,25 @@ Here is the recommended approach:
   application). All the storage levels provide full fault tolerance by recomputing lost data, but the replicated ones
   let us continue running tasks on the RDD without waiting to recompute a lost partition.
 
+Doing some basic JMH benchmarking tests, here is the result:
+
+```
+Benchmark                                                                                     Mode  Cnt    Score     Error  Units
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistNone              avgt   15  181.143 ±   3.380  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryOnly        avgt   15  185.938 ±   4.073  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryOnlySer     avgt   15  187.465 ±   3.522  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistDiskOnly          avgt   15  190.294 ±   6.576  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithoutCacheOrPersist        avgt   15  191.123 ±  14.377  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryAndDiskSer  avgt   15  195.425 ±   5.849  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithCache                    avgt   15  218.201 ±  55.980  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistOffHeap           avgt   15  225.943 ±  26.791  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryAndDisk     avgt   15  316.126 ± 184.459  ms/op
+```
+
+As seen in the test results, for most of the (smaller) data sets, using MEMORY ONLY persistence results in better
+performance. For the very huge data sets (terabytes, petabytes, etc.), we may consider using MEMORY AND DISK storage
+levels.
+
 #### Removing Data
 
 Spark automatically monitors cache usage on each node and drops out old data partitions in a **least-recently-used (
