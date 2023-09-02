@@ -30,7 +30,7 @@ public class RDDClosuresAccumulatorsTest {
             final var data = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
             final var myRdd = sparkContext.parallelize(data);
 
-            long sum = 0;
+            final long sum = 0;
 
             // myRdd.foreach(x -> sum += x); // WILL NOT COMPILE
 
