@@ -1424,6 +1424,11 @@ LRU)** fashion. If we would like to manually remove an RDD instead of waiting fo
 `RDD.unpersist()` method. Note that this method does not block by default. To block until resources are freed, specify
 `blocking=true` when calling this method.
 
+#### Youtube
+
+- [73 - Spark RDD - Persistence](https://youtu.be/r9kaCKv64iA)
+- [74 - Spark RDD - Persistence - Code Demo](https://youtu.be/cMNqUNFdSXQ)
+
 ---
 
 ### Chapter 16. Spark RDD - Closures and Shared Variables
