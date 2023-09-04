@@ -162,6 +162,96 @@ public class RDDCachePersistenceBenchmarking {
         }
     }
 
+    @Benchmark
+    public long groupByKeyWithPersistMemoryOnly2() {
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var lines = sparkContext.textFile(testFilePath);
+            final var pairRDD = lines.mapToPair(line -> new Tuple2<>(line.length(), 1L));
+            final var persistedPairRdd = pairRDD.persist(StorageLevel.MEMORY_ONLY_2());
+            final var counts = persistedPairRdd.groupByKey();
+            counts.take(1).forEach(tuple -> {
+                final Integer integer = tuple._1;
+                final int size = Iterables.size(tuple._2);
+            });
+            return persistedPairRdd.count();
+        }
+    }
+
+    @Benchmark
+    public long groupByKeyWithPersistMemoryAndDisk2() {
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var lines = sparkContext.textFile(testFilePath);
+            final var pairRDD = lines.mapToPair(line -> new Tuple2<>(line.length(), 1L));
+            final var persistedPairRdd = pairRDD.persist(StorageLevel.MEMORY_AND_DISK_2());
+            final var counts = persistedPairRdd.groupByKey();
+            counts.take(1).forEach(tuple -> {
+                final Integer integer = tuple._1;
+                final int size = Iterables.size(tuple._2);
+            });
+            return persistedPairRdd.count();
+        }
+    }
+
+    @Benchmark
+    public long groupByKeyWithPersistMemoryOnlySer2() {
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var lines = sparkContext.textFile(testFilePath);
+            final var pairRDD = lines.mapToPair(line -> new Tuple2<>(line.length(), 1L));
+            final var persistedPairRdd = pairRDD.persist(StorageLevel.MEMORY_ONLY_SER_2());
+            final var counts = persistedPairRdd.groupByKey();
+            counts.take(1).forEach(tuple -> {
+                final Integer integer = tuple._1;
+                final int size = Iterables.size(tuple._2);
+            });
+            return persistedPairRdd.count();
+        }
+    }
+
+    @Benchmark
+    public long groupByKeyWithPersistMemoryAndDiskSer2() {
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var lines = sparkContext.textFile(testFilePath);
+            final var pairRDD = lines.mapToPair(line -> new Tuple2<>(line.length(), 1L));
+            final var persistedPairRdd = pairRDD.persist(StorageLevel.MEMORY_AND_DISK_SER_2());
+            final var counts = persistedPairRdd.groupByKey();
+            counts.take(1).forEach(tuple -> {
+                final Integer integer = tuple._1;
+                final int size = Iterables.size(tuple._2);
+            });
+            return persistedPairRdd.count();
+        }
+    }
+
+    @Benchmark
+    public long groupByKeyWithPersistDiskOnly2() {
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var lines = sparkContext.textFile(testFilePath);
+            final var pairRDD = lines.mapToPair(line -> new Tuple2<>(line.length(), 1L));
+            final var persistedPairRdd = pairRDD.persist(StorageLevel.DISK_ONLY_2());
+            final var counts = persistedPairRdd.groupByKey();
+            counts.take(1).forEach(tuple -> {
+                final Integer integer = tuple._1;
+                final int size = Iterables.size(tuple._2);
+            });
+            return persistedPairRdd.count();
+        }
+    }
+
+    @Benchmark
+    public long groupByKeyWithPersistDiskOnly3() {
+        try (final var sparkContext = new JavaSparkContext(sparkConf)) {
+            final var lines = sparkContext.textFile(testFilePath);
+            final var pairRDD = lines.mapToPair(line -> new Tuple2<>(line.length(), 1L));
+            final var persistedPairRdd = pairRDD.persist(StorageLevel.DISK_ONLY_3());
+            final var counts = persistedPairRdd.groupByKey();
+            counts.take(1).forEach(tuple -> {
+                final Integer integer = tuple._1;
+                final int size = Iterables.size(tuple._2);
+            });
+            return persistedPairRdd.count();
+        }
+    }
+
     public static void main(final String[] args) throws RunnerException {
         final Options opt = new OptionsBuilder()
                 .include(RDDCachePersistenceBenchmarking.class.getName())

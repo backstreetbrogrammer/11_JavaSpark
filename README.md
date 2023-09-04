@@ -1401,16 +1401,22 @@ Here is the recommended approach:
 Doing some basic JMH benchmarking tests, here is the result:
 
 ```
-Benchmark                                                                                     Mode  Cnt    Score     Error  Units
-chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistNone              avgt   15  181.143 ±   3.380  ms/op
-chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryOnly        avgt   15  185.938 ±   4.073  ms/op
-chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryOnlySer     avgt   15  187.465 ±   3.522  ms/op
-chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistDiskOnly          avgt   15  190.294 ±   6.576  ms/op
-chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithoutCacheOrPersist        avgt   15  191.123 ±  14.377  ms/op
-chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryAndDiskSer  avgt   15  195.425 ±   5.849  ms/op
-chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithCache                    avgt   15  218.201 ±  55.980  ms/op
-chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistOffHeap           avgt   15  225.943 ±  26.791  ms/op
-chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryAndDisk     avgt   15  316.126 ± 184.459  ms/op
+Benchmark                                                                                      Mode  Cnt    Score    Error  Units
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithoutCacheOrPersist         avgt   15  177.055 ±  6.468  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryOnly         avgt   15  179.497 ±  7.014  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithCache                     avgt   15  180.317 ±  4.419  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistDiskOnly3          avgt   15  180.626 ±  2.459  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistNone               avgt   15  181.515 ±  9.388  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistDiskOnly           avgt   15  182.130 ±  5.598  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistDiskOnly2          avgt   15  182.257 ±  6.675  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryOnlySer      avgt   15  183.195 ±  4.126  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryAndDiskSer   avgt   15  184.923 ±  2.998  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryOnlySer2     avgt   15  186.338 ±  3.275  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryAndDiskSer2  avgt   15  187.545 ±  4.719  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryOnly2        avgt   15  190.279 ±  3.603  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryAndDisk      avgt   15  191.486 ± 19.713  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistMemoryAndDisk2     avgt   15  193.791 ±  4.053  ms/op
+chapter15_cachePersist.RDDCachePersistenceBenchmarking.groupByKeyWithPersistOffHeap            avgt   15  199.814 ±  3.929  ms/op
 ```
 
 As seen in the test results, for most of the (smaller) data sets, using MEMORY ONLY persistence results in better
