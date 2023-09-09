@@ -1434,6 +1434,8 @@ LRU)** fashion. If we would like to manually remove an RDD instead of waiting fo
 
 - [73 - Spark RDD - Persistence](https://youtu.be/r9kaCKv64iA)
 - [74 - Spark RDD - Persistence - Code Demo](https://youtu.be/cMNqUNFdSXQ)
+- [75 - Spark RDD - Persistence - JMH Benchmarking 1](https://youtu.be/BYgeIS3-cho)
+- [76 - Spark RDD - Persistence - JMH Benchmarking 2](https://youtu.be/_GchQbtpLOU)
 
 ---
 
