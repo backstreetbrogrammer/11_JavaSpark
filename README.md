@@ -1,6 +1,7 @@
 # Apache Spark for Java Developers
 
-> Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on single-node machines or clusters.
+> Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on
+> single-node machines or clusters.
 
 Key Features:
 
@@ -93,14 +94,14 @@ volumes of data can be used to address business problems we would not have been 
 
 ![Big Data](BigData.png)
 
-| Name | Value (10^) | Value (2^) |
-| ----------- |-------------|------------|
-| kilobyte (kB) | 10^3        | 2^10       |
-| megabyte (MB)    | 10^6        | 2^20       |
-| gigabyte (GB)    | 10^9        | 2^30       |
-| terabyte (TB)    | 10^12       | 2^40       |
-| petabyte (PB)    | 10^15       | 2^50       |
-| exabyte (EB)    | 10^18       | 2^60       |
+| Name           | Value (10^) | Value (2^) |
+|----------------|-------------|------------|
+| kilobyte (kB)  | 10^3        | 2^10       |
+| megabyte (MB)  | 10^6        | 2^20       |
+| gigabyte (GB)  | 10^9        | 2^30       |
+| terabyte (TB)  | 10^12       | 2^40       |
+| petabyte (PB)  | 10^15       | 2^50       |
+| exabyte (EB)   | 10^18       | 2^60       |
 | zettabyte (ZB) | 10^21       | 2^70       |
 | yottabyte (YB) | 10^24       | 2^80       |
 
