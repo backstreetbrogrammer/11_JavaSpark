@@ -568,7 +568,7 @@ Latest apache spark version as of this writing is **3.3.1**
 Latest hadoop version as of this writing is **3.3.4**
 
 Complete `pom.xml` can be found at Github:
-[pom.xml](https://github.com/backstreetbrogrammer/11_JavaSpark/pom.xml)
+[pom.xml](https://github.com/backstreetbrogrammer/11_JavaSpark/blob/main/pom.xml)
 
 Run Maven Verify command to ensure Maven setup is complete: `mvn verify`
 
