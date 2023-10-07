@@ -1539,6 +1539,10 @@ into the accumulator, `merge()` for merging another same-type accumulator into t
 overridden are contained in
 the [API documentation](https://spark.apache.org/docs/latest/api/scala/org/apache/spark/util/AccumulatorV2.html).
 
+#### Youtube
+
+- [77 - Spark RDD - Closures and Shared Variables](https://youtu.be/EkL5Houhopo)
+
 ---
 
 ### Chapter 17. Spark RDD - Submitting applications
