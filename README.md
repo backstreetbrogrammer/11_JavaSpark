@@ -57,6 +57,9 @@ machines.
     - [Storage Level to chose](https://github.com/backstreetbrogrammer/11_JavaSpark#storage-level-to-chose)
     - [Removing Data](https://github.com/backstreetbrogrammer/11_JavaSpark#removing-data)
 16. [Spark RDD - Closures and Shared Variables](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-16-spark-rdd---closures-and-shared-variables)
+    - [Understanding closure concept in Java](https://github.com/backstreetbrogrammer/11_JavaSpark#understanding-closure-concept-in-java)
+    - [Understanding closure concept in Spark](https://github.com/backstreetbrogrammer/11_JavaSpark#understanding-closure-concept-in-spark)
+    - [Shared Variables](https://github.com/backstreetbrogrammer/11_JavaSpark#shared-variables)
     - [Broadcast Variables](https://github.com/backstreetbrogrammer/11_JavaSpark#broadcast-variables)
     - [Accumulators](https://github.com/backstreetbrogrammer/11_JavaSpark#accumulators)
 17. [Spark RDD - Submitting applications](https://github.com/backstreetbrogrammer/11_JavaSpark#part-i---spark-rdd)
@@ -1515,7 +1518,64 @@ Spark does not define or guarantee the behavior of mutations to objects referenc
 that does this may work in local mode, but that’s just by accident and such code will not behave as expected in
 distributed mode. Use an **Accumulator** instead if some global aggregation is needed.
 
+#### Shared Variables
+
+When a function passed to a Spark operation (such as `map` or `reduce`) is executed on a remote cluster node, it works
+on **separate copies** of all the variables used in the function.
+
+These variables are **copied to each machine**, and no updates to the variables on the remote machine are propagated
+back to the **driver program**.
+
+Supporting general, read-write shared variables across tasks would be inefficient. However, Spark does provide two
+**limited** types of shared variables for two common usage patterns:
+
+- broadcast variables
+- accumulators
+
+![SharedVariables](SharedVariables.PNG)
+
 #### Broadcast Variables
+
+Broadcast variables allow the programmer to keep a **read-only** variable cached on each machine rather than shipping a
+copy of it with tasks.
+
+Spark attempts to distribute broadcast variables using efficient **broadcast algorithms** to reduce communication cost.
+
+Spark actions are executed through a set of **stages**, separated by distributed **"shuffle"** operations.
+
+Spark automatically broadcasts the **common data** needed by tasks within each stage.
+
+The data broadcast this way is **cached** in **serialized form** and **deserialized** _**before**_ running each task.
+
+This means that explicitly creating broadcast variables is only useful when tasks across multiple stages need the same
+data or when caching the data in deserialized form is important.
+
+![Broadcast](Broadcast.PNG)
+
+Broadcast variables are created from a variable `m` by calling `SparkContext.broadcast(m)`. The broadcast variable is a
+wrapper around `m`, and its value can be accessed by calling the `value()` method.
+
+```
+// m = new int[] {1, 2, 3, 4, 5}
+Broadcast<int[]> broadcastVar = sc.broadcast(new int[] {1, 2, 3, 4, 5});
+
+broadcastVar.value(); // returns [1, 2, 3, 4, 5]
+```
+
+After the broadcast variable `broadcastVar` is created, it should be used instead of the value `m` in any functions run
+on the cluster so that `m` is not shipped to the nodes **more than once**.
+
+In addition, the object `m` should **NOT** be modified after it is broadcast in order to ensure that all nodes get the
+**same value** of the broadcast variable (for example, if the variable is shipped to a new node later).
+
+To release the resources that the broadcast variable copied onto executors, call `unpersist()`. If the broadcast is
+used again afterward, it will be **re-broadcast**.
+
+To permanently release all resources used by the broadcast variable, call `destroy()`. The broadcast variable can't be
+used after that.
+
+Note that these methods do not block by default. To block until resources are freed, specify `blocking=true` when
+calling them.
 
 #### Accumulators
 
