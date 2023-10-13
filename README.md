@@ -24,23 +24,23 @@ machines.
 ### [Part I - Spark RDD](https://github.com/backstreetbrogrammer/11_JavaSpark#part-i---spark-rdd)
 
 1. [The Big Picture](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-01-the-big-picture)
-    - Big Data
-    - Local versus Distributed Systems
-    - Apache Hadoop and MapReduce
-    - Apache Spark Ecosystem
-    - Cluster Mode Overview
-    - Spark RDDs
+    - [Big Data](https://github.com/backstreetbrogrammer/11_JavaSpark#11-big-data)
+    - [Local versus Distributed Systems](https://github.com/backstreetbrogrammer/11_JavaSpark#12-local-versus-distributed-systems)
+    - [Apache Hadoop and MapReduce](https://github.com/backstreetbrogrammer/11_JavaSpark#13-apache-hadoop-and-mapreduce)
+    - [Apache Spark Ecosystem](https://github.com/backstreetbrogrammer/11_JavaSpark#14-apache-spark-ecosystem)
+    - [Cluster Mode Overview](https://github.com/backstreetbrogrammer/11_JavaSpark#15-cluster-mode-overview)
+    - [Spark RDDs](https://github.com/backstreetbrogrammer/11_JavaSpark#16-spark-rdds)
 2. [Spark Installation and IntelliJ Project Setup](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-02-spark-installation-and-intellij-project-setup)
-    - JDK, Scala, Maven and IntelliJ installation
-    - Apache Spark and Hadoop installation
-    - Download `winutils.exe` and `hadoop.dll` (only for `Windows`)
-    - Verify Spark installation using Spark Shell
-    - IntelliJ Project Setup - Maven
+    - [JDK, Scala, Maven and IntelliJ installation](https://github.com/backstreetbrogrammer/11_JavaSpark#21-jdk-scala-maven-and-intellij-installation)
+    - [Apache Spark and Hadoop installation](https://github.com/backstreetbrogrammer/11_JavaSpark#22-download-apache-spark-and-hadoop)
+    - [Download `winutils.exe` and `hadoop.dll` (only for `Windows`)](https://github.com/backstreetbrogrammer/11_JavaSpark#23-download-winutilsexe-and-hadoopdll-only-for-windows)
+    - [Verify Spark installation using Spark Shell](https://github.com/backstreetbrogrammer/11_JavaSpark#24-verify-spark-installation)
+    - [IntelliJ Project Setup - Maven](https://github.com/backstreetbrogrammer/11_JavaSpark#25-intellij-project-setup---maven)
 3. [Spark RDD - First Program](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-03-spark-rdd---first-program)
-    - SparkContext
-    - SparkSession
-    - Initializing Spark
-    - Spark Web UI
+    - [SparkContext](https://github.com/backstreetbrogrammer/11_JavaSpark#sparkcontext)
+    - [SparkSession](https://github.com/backstreetbrogrammer/11_JavaSpark#sparksession)
+    - [Initializing Spark](https://github.com/backstreetbrogrammer/11_JavaSpark#initializing-spark)
+    - [Spark Web UI](https://github.com/backstreetbrogrammer/11_JavaSpark#spark-web-ui)
 4. [Create RDD using `parallelize()`](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-04-create-rdd-using-parallelize)
 5. [Create RDD using External Datasets](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-05-create-rdd-using-external-datasets)
 6. [Spark RDD Actions - `reduce()`, `fold()`, `aggregate()`](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-06-spark-rdd-actions---reduce-fold-aggregate)
@@ -53,11 +53,12 @@ machines.
 13. [Spark RDD - Joins](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-13-spark-rdd---joins)
 14. [Spark RDD - Shuffles](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-14-spark-rdd---shuffles)
 15. [Spark RDD - Persistence](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-15-spark-rdd---persistence)
-    - Cache vs Persist
-    - Persistence Storage Levels
+    - [Cache vs Persist](https://github.com/backstreetbrogrammer/11_JavaSpark#cache-vs-persist)
+    - [Storage Level to chose](https://github.com/backstreetbrogrammer/11_JavaSpark#storage-level-to-chose)
+    - [Removing Data](https://github.com/backstreetbrogrammer/11_JavaSpark#removing-data)
 16. [Spark RDD - Closures and Shared Variables](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-16-spark-rdd---closures-and-shared-variables)
-    - Accumulators
-    - Broadcast Variables
+    - [Broadcast Variables](https://github.com/backstreetbrogrammer/11_JavaSpark#broadcast-variables)
+    - [Accumulators](https://github.com/backstreetbrogrammer/11_JavaSpark#accumulators)
 17. [Spark RDD - Submitting applications](https://github.com/backstreetbrogrammer/11_JavaSpark#part-i---spark-rdd)
 18. [Databricks and AWS EMR](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-18-databricks-and-aws-emr)
 19. [Introduction to Kryo Serialization](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-19-introduction-to-kryo-serialization)
@@ -1361,6 +1362,8 @@ When we persist an RDD, each node stores any _partitions_ of it that it computes
 actions on that dataset (or datasets derived from it). This allows future actions to be much faster (often by more than
 10x). Caching is a key tool for iterative algorithms and fast interactive use.
 
+#### Cache vs Persist
+
 We can mark an RDD to be persisted using `persist()` or `cache()` methods on it.
 
 The first time it is computed in an **action**, it will be kept in memory on the nodes.
@@ -1502,7 +1505,7 @@ the serialized closure.
 In **local** mode, in some circumstances, the `foreach()` function will actually execute within the same JVM as the
 driver and executors will reference the same original `sum`, and may actually update it.
 
-To ensure well-defined behavior in these sorts of scenarios one should use an `Accumulator`.
+To ensure well-defined behavior in these sorts of scenarios, one should use an `Accumulator`.
 
 **Accumulators** in Spark are used specifically to provide a mechanism for safely updating a variable when execution is
 split up across worker nodes in a cluster.
@@ -1511,6 +1514,8 @@ In general, closures - constructs like loops or locally defined methods, should 
 Spark does not define or guarantee the behavior of mutations to objects referenced from outside of closures. Some code
 that does this may work in local mode, but that’s just by accident and such code will not behave as expected in
 distributed mode. Use an **Accumulator** instead if some global aggregation is needed.
+
+#### Broadcast Variables
 
 #### Accumulators
 
