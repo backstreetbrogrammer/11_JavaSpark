@@ -1495,13 +1495,19 @@ System.out.printf("Total sum: %d%n", sum);
 ```
 
 To execute jobs, Spark breaks up the processing of RDD operations into **tasks**, each of which is executed by an
-**executor**. Prior to execution, Spark computes the task’s `closure`. The `closure` are those variables and methods
-which must be visible for the executor to perform its computations on the RDD (in this case `foreach()`). This closure
-is **serialized** and sent to each executor.
+**executor**.
+
+**Prior to execution**, Spark computes the task's `closure`. The `closure` are those variables and methods which must be
+visible for the executor to perform its computations on the RDD (in this case `foreach()`).
+
+This `closure` is **serialized** and sent to each executor.
 
 The variables within the closure sent to each executor are now copies and thus, when `sum` is referenced within the
-`foreach()` function, it’s no longer the `sum` on the driver node. There is still a `sum` in the memory of the driver
-node but this is no longer visible to the executors! The executors only see the **copy** from the serialized closure.
+`foreach()` function, it's no longer the `sum` on the **driver node**.
+
+There is still a `sum` in the memory of the **driver node** but this is no longer visible to the **executors**! The
+executors only see the **copy** from the serialized closure.
+
 Thus, the final value of `sum` will still be **zero** since all operations on `sum` were referencing the value within
 the serialized closure.
 
@@ -1514,9 +1520,11 @@ To ensure well-defined behavior in these sorts of scenarios, one should use an `
 split up across worker nodes in a cluster.
 
 In general, closures - constructs like loops or locally defined methods, should not be used to mutate some global state.
-Spark does not define or guarantee the behavior of mutations to objects referenced from outside of closures. Some code
-that does this may work in local mode, but that’s just by accident and such code will not behave as expected in
-distributed mode. Use an **Accumulator** instead if some global aggregation is needed.
+
+Spark does not define or guarantee the behavior of mutations to objects referenced from **outside** of closures.
+
+Some code that does this may work in **local mode**, but that's just by accident and such code will not behave as
+expected in **distributed mode**. Use an **Accumulator** instead if some global aggregation is needed.
 
 #### Shared Variables
 
