@@ -1615,6 +1615,9 @@ the [API documentation](https://spark.apache.org/docs/latest/api/scala/org/apach
 #### Youtube
 
 - [77 - Spark RDD - Closures and Shared Variables](https://youtu.be/EkL5Houhopo)
+- [78 - Spark RDD - Understanding closure concept in Spark](https://youtu.be/4d35GipvrLI)
+- [79 - Spark RDD - Broadcast variables - Theory](https://youtu.be/Euwypg4iHQY)
+- [80 - Spark RDD - Broadcast variables - Code Demo](https://youtu.be/zfrNlJG2wi4)
 
 ---
 

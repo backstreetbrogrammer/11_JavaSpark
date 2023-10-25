@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RDDBroadcastDemo {
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         try (final var spark = SparkSession.builder()
                                            .appName("RDDBroadcastDemo")
                                            .master("local[*]")
