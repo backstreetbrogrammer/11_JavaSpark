@@ -1484,7 +1484,7 @@ operations that modify variables outside their scope can be a frequent source of
 
 Example:
 
-Following code will NOT compile as `int` **sum** variable is not `final` or **effectively final**:
+The following code will NOT compile as `int` **sum** variable is not `final` or **effectively final**:
 
 ```
 final var data = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
