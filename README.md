@@ -64,8 +64,7 @@ machines.
     - [Accumulators](https://github.com/backstreetbrogrammer/11_JavaSpark#accumulators)
 17. [Spark RDD - Submitting applications](https://github.com/backstreetbrogrammer/11_JavaSpark#part-i---spark-rdd)
 18. [Databricks and AWS EMR](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-18-databricks-and-aws-emr)
-19. [Introduction to Kryo Serialization](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-19-introduction-to-kryo-serialization)
-20. [Tuning Spark](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-20-tuning-spark)
+19. [Tuning Spark](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-19-tuning-spark)
 
 ### Part II - Spark SQL
 
@@ -1729,11 +1728,7 @@ spark-submit \
 
 ---
 
-### Chapter 19. Introduction to Kryo Serialization
-
----
-
-### Chapter 20. Tuning Spark
+### Chapter 19. Tuning Spark
 
 
 
