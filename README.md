@@ -1586,30 +1586,40 @@ calling them.
 
 #### Accumulators
 
-Accumulators are variables that are only “added” to through an associative and commutative operation and can therefore
-be efficiently supported in parallel. They can be used to implement counters (as in MapReduce) or sums. Spark natively
-supports accumulators of **numeric** types, and programmers can add support for new types.
+Accumulators are variables that are only **"added"** to through an **associative** and **commutative** operation and can
+therefore be efficiently supported in parallel.
 
-A **numeric** accumulator can be created by calling `SparkContext.longAccumulator()`
-or `SparkContext.doubleAccumulator()` to accumulate values of type `Long` or `Double`, respectively. Tasks running on a
-cluster can then add to it using the `add()` method. However, they **cannot** read its **value**. Only the driver
-program can read the accumulator’s value, using its `value()` method.
+They can be used to implement **counters** (as in `MapReduce`) or **sums**.
 
-For accumulator updates performed inside `actions` only, Spark guarantees that each task’s update to the accumulator
-will only be applied once, i.e. restarted tasks will not update the value.
+Spark natively supports accumulators of **numeric** types, and programmers can add support for **new types**.
 
-In `transformations`, users should be aware of that each task’s update may be applied more than once if tasks or job
+A **numeric** accumulator can be created by calling `SparkContext.longAccumulator()` or
+`SparkContext.doubleAccumulator()` to accumulate values of type `Long` or `Double`, respectively.
+
+Tasks running on a cluster can then add to it using the `add()` method. However, they **cannot** read its **value**.
+
+Only the **driver program** can read the accumulator’s value, using its `value()` method.
+
+For accumulator updates performed inside `actions` only, Spark guarantees that each task's update to the accumulator
+will only be applied **once**, i.e., restarted tasks will not update the value.
+
+In `transformations`, users should be aware of that each task's update may be applied **more than once** if tasks or job
 stages are re-executed.
 
 Accumulators do not change the `lazy` evaluation model of Spark. If they are being updated within an operation on an
-RDD, their value is only updated once that RDD is computed as part of an action. Consequently, accumulator updates are
-not guaranteed to be executed when made within a lazy transformation like `map()`.
+RDD, their value is only updated **once** that RDD is computed as part of an **action**. Consequently, accumulator
+updates are not guaranteed to be executed when made within a lazy transformation like `map()`.
 
-We can also create our own accumulators by subclassing `AccumulatorV2`. The `AccumulatorV2` abstract class has several
-methods which one has to override: `reset()` for resetting the accumulator to zero, `add()` for adding another value
-into the accumulator, `merge()` for merging another same-type accumulator into this one, etc. Other methods that must be
-overridden are contained in
-the [API documentation](https://spark.apache.org/docs/latest/api/scala/org/apache/spark/util/AccumulatorV2.html).
+We can also create our own accumulators by subclassing `AccumulatorV2`.
+
+The `AccumulatorV2` abstract class has several methods which one has to override:
+
+- `reset()` for resetting the accumulator to zero
+- `add()` for adding another value into the accumulator
+- `merge()` for merging another same-type accumulator into this one, etc.
+
+Other methods that must be overridden are contained in the
+[API documentation](https://spark.apache.org/docs/latest/api/scala/org/apache/spark/util/AccumulatorV2.html).
 
 #### Youtube
 
