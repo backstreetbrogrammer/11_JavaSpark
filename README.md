@@ -1627,6 +1627,7 @@ Other methods that must be overridden are contained in the
 - [78 - Spark RDD - Understanding closure concept in Spark](https://youtu.be/4d35GipvrLI)
 - [79 - Spark RDD - Broadcast variables - Theory](https://youtu.be/Euwypg4iHQY)
 - [80 - Spark RDD - Broadcast variables - Code Demo](https://youtu.be/zfrNlJG2wi4)
+- [81 - Spark RDD - Accumulators - Theory](https://youtu.be/EWj0L7hi-vI)
 
 ---
 
