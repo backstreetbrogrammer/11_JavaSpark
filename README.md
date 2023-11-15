@@ -1628,6 +1628,8 @@ Other methods that must be overridden are contained in the
 - [79 - Spark RDD - Broadcast variables - Theory](https://youtu.be/Euwypg4iHQY)
 - [80 - Spark RDD - Broadcast variables - Code Demo](https://youtu.be/zfrNlJG2wi4)
 - [81 - Spark RDD - Accumulators - Theory](https://youtu.be/EWj0L7hi-vI)
+- [82 - Spark RDD - LongAccumulator and DoubleAccumulator code demo](https://youtu.be/AoJ83IQsQ_I)
+- [83 - Spark RDD - custom StringAccumulator code demo](https://youtu.be/GNzv5Tn9rlw)
 
 ---
 
