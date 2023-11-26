@@ -1621,6 +1621,15 @@ The `AccumulatorV2` abstract class has several methods which one has to override
 Other methods that must be overridden are contained in the
 [API documentation](https://spark.apache.org/docs/latest/api/scala/org/apache/spark/util/AccumulatorV2.html).
 
+In `StockPositionAccumulator`, we will build our custom stock position and profit accumulator based on realtime
+intra-day trades.
+
+For **buy** trades, `position += traded quantity`, `profit -= notional`
+
+For **sell** trades, `position -= traded quantity`, `profit += notional`
+
+`(notional = traded quantity * executed price)`
+
 #### Youtube
 
 - [77 - Spark RDD - Closures and Shared Variables](https://youtu.be/EkL5Houhopo)
@@ -1630,6 +1639,7 @@ Other methods that must be overridden are contained in the
 - [81 - Spark RDD - Accumulators - Theory](https://youtu.be/EWj0L7hi-vI)
 - [82 - Spark RDD - LongAccumulator and DoubleAccumulator code demo](https://youtu.be/AoJ83IQsQ_I)
 - [83 - Spark RDD - custom StringAccumulator code demo](https://youtu.be/GNzv5Tn9rlw)
+- [84 - Spark RDD - Custom StockPositionAccumulator code demo](https://youtu.be/d7o3CHHdGnY)
 
 ---
 

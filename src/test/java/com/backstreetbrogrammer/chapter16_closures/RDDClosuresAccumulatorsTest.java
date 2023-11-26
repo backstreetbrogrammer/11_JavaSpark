@@ -136,6 +136,11 @@ public class RDDClosuresAccumulatorsTest {
             final var trade5 = new Trade("META", 5000L, 80D, 200, Side.BUY);
             final var trade6 = new Trade("TSLA", 6000L, 100D, 300, Side.BUY);
 
+            // for AAPL,
+            // trade1=> 50 * 100 = 5000, position=100, profit=-5000
+            // trade3=> 51 * 100 = 5100, position=100+100 =200, profit=-5000+(-5100) = -10100
+            // trade4=> 52 * 200 = 10400, position=200-200 =0, profit=-10100+10400 = 300
+
             final var trades1
                     = List.of(trade1, trade2, trade3);
             final var trades2
