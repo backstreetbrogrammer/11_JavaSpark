@@ -1645,6 +1645,82 @@ For **sell** trades, `position -= traded quantity`, `profit += notional`
 
 ### Chapter 17. Spark RDD - Submitting applications
 
+The `spark-submit` script in Spark's bin directory is used to launch applications on a **cluster**.
+
+At a high level, the `spark-submit` command supports the following:
+
+- Submitting Spark applications on different cluster managers like `Standalone`, `Yarn`, and `Kubernetes`
+- Submitting Spark application on `client` or `cluster` deployment **modes**
+
+The system currently supports several cluster managers:
+
+- **Standalone** – a simple cluster manager included with Spark that makes it easy to set up a cluster.
+- **Hadoop YARN** – the resource manager in Hadoop 3.
+- **Kubernetes** – an open-source system for automating deployment, scaling, and management of containerized
+  applications.
+
+**Cluster Mode Overview**
+
+- Spark applications run as independent sets of processes on a **cluster**, coordinated by the `SparkContext` object
+  in our `main` program (called the `driver` program)
+- To run on a cluster, `SparkContext` can connect to several types of cluster managers (either Spark's own standalone
+  cluster manager, YARN or Kubernetes), which allocate resources across applications
+- Once connected, Spark acquires `executors` on **nodes** in the cluster, which are processes that run computations and
+  store data for our application
+- Next, it sends our application code (defined by JAR files passed to `SparkContext`) to the executors
+- Finally, `SparkContext` sends **tasks** to the executors to run
+
+There are quite useful things about this architecture:
+
+- Each **application** gets its own **executor** processes, which stay up for the duration of the whole application and
+  run tasks in multiple threads.
+
+Applications are isolated from each other on both the **scheduling** side (each **driver** schedules its own tasks) and
+**executor** side (tasks from different applications run in different JVMs).
+
+- The **driver** program must listen for and accept incoming connections from its **executors** throughout its
+  lifetime (e.g., `spark.driver.port`).
+
+As such, the **driver** program must be network addressable from the **worker** nodes.
+
+Because the driver schedules tasks on the cluster, it should be run close to the worker nodes, preferably on the same
+local area network.
+
+If we'd like to send requests to the cluster remotely, it's better to open an RPC to the driver and have it submit
+operations from nearby than to run a driver far away from the worker nodes.
+
+**Bundling our application dependencies**
+
+We can create an assembly jar containing our code and its dependencies.
+
+Maven has got `maven-assembly-plugin` which can build a single jar containing all our code and its dependencies:
+
+```xml
+
+<plugin>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <version>3.6.0</version>
+    <configuration>
+        <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+    </configuration>
+    <executions>
+        <execution>
+            <id>make-assembly</id> <!-- this is used for inheritance merges -->
+            <phase>package</phase> <!-- bind to the packaging phase -->
+            <goals>
+                <goal>single</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+**Launching applications with spark-submit**
+
+
+
 ---
 
 ### Chapter 18. Databricks and AWS EMR
