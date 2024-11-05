@@ -64,13 +64,8 @@ machines.
     - [Accumulators](https://github.com/backstreetbrogrammer/11_JavaSpark#accumulators)
 17. [Spark RDD - Submitting applications](https://github.com/backstreetbrogrammer/11_JavaSpark#part-i---spark-rdd)
 18. [Databricks and AWS EMR](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-18-databricks-and-aws-emr)
-19. [Tuning Spark](https://github.com/backstreetbrogrammer/11_JavaSpark#chapter-19-tuning-spark)
 
 ### Part II - Spark SQL
-
-### Part III - Spark Streaming
-
-### Part IV - Spark ML
 
 ### Youtube
 
@@ -1827,7 +1822,6 @@ spark-submit \
 
 ---
 
-### Chapter 19. Tuning Spark
 
 
 
